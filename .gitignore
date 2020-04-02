@@ -2,7 +2,8 @@
 # Edit at https://www.gitignore.io/?templates=java,maven,eclipse,intellij
 
 ### Null Team 6 Specific ###
-src/main/resources/hibernate.cfg.xml
+src/main/webapp/WEB-INF/BackEnd-servlet.xml
+.vscode
 
 ### Eclipse ###
 .metadata
