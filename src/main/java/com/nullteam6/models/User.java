@@ -1,10 +1,6 @@
 package com.nullteam6.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "miro_users")
@@ -16,7 +12,7 @@ public class User {
 
     private String firstName;
     private String lastName;
-    private String userName;
+    private String username;
     private String password;
     private boolean admin;
 
@@ -27,7 +23,7 @@ public class User {
     public User(String firstName, String lastName, String userName, String password, boolean admin) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.userName = userName;
+        this.username = userName;
         this.password = password;
         this.admin = admin;
     }
@@ -35,7 +31,7 @@ public class User {
     public User(UserTemplate template) {
         this.firstName = template.getFirstName();
         this.lastName = template.getLastName();
-        this.userName = template.getUserName();
+        this.username = template.getUsername();
         this.password = template.getPassword();
         this.admin = false;
     }
@@ -64,12 +60,12 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String userName) {
+        this.username = userName;
     }
 
     public String getPassword() {

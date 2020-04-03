@@ -2,7 +2,6 @@ package com.nullteam6.service;
 
 import com.nullteam6.models.User;
 import com.nullteam6.models.UserTemplate;
-
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -18,7 +17,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User findByUserName(String userName) {
-        String hql = "FROM User U WHERE U.userName = :userName";
+        String hql = "FROM User U WHERE U.username = :userName";
         User u = null;
         try (Session s = sf.openSession()) {
             u = (User) s.createQuery(hql)
