@@ -2,10 +2,12 @@ package com.nullteam6.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nullteam6.models.LoginTemplate;
 import com.nullteam6.models.User;
 import com.nullteam6.models.UserTemplate;
 import com.nullteam6.service.UserDAO;
 
+import com.nullteam6.utility.PBKDF2Hasher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,33 +17,36 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/login")
+public class LoginController {
     @Autowired
     private UserDAO dao;
 
-    @RequestMapping(value="{username}", method = RequestMethod.GET)
+    @RequestMapping(value="{userName}", method = RequestMethod.GET)
     public @ResponseBody User getUser(@PathVariable String username) {
         return dao.findByUsername(username);
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public @ResponseBody User registerUser(@RequestBody String payload) {
+    public @ResponseBody User tryLogin(@RequestBody String payload) {
         // TODO: Figure out error handling for yeeting errors
         ObjectMapper mapper = new ObjectMapper();
-        UserTemplate userTemplate = null;
+        LoginTemplate login = null;
 
         try {
-            userTemplate = mapper.readValue(payload, UserTemplate.class);
+            login = mapper.readValue(payload, LoginTemplate.class);
+            User user = dao.findByUsername(login.getUsername());
+
+            if (user != null) {
+                PBKDF2Hasher hasher = new PBKDF2Hasher();
+                if (hasher.checkPassword(login.getPassword().toCharArray(), user.getPassword())) {
+                    return user;
+                }
+            }
         } catch(JsonProcessingException e) {
             e.getStackTrace();
         }
-        
-        if (userTemplate != null) {
-            User u = dao.registerUser(userTemplate);
-            return u;
-        } else {
-            return null;
-        }
+
+        return null;
     }
 }

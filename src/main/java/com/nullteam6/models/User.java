@@ -5,7 +5,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "miro_users")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
@@ -20,10 +19,10 @@ public class User {
         super();
     }
 
-    public User(String firstName, String lastName, String userName, String password, boolean admin) {
+    public User(String firstName, String lastName, String username, String password, boolean admin) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.username = userName;
+        this.username = username;
         this.password = password;
         this.admin = admin;
     }
@@ -64,8 +63,8 @@ public class User {
         return username;
     }
 
-    public void setUsername(String userName) {
-        this.username = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {

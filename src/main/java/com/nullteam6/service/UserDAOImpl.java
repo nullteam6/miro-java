@@ -11,17 +11,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class UserDAOImpl implements UserDAO {
-    
     @Autowired
     private SessionFactory sf;
 
     @Override
-    public User findByUserName(String userName) {
-        String hql = "FROM User U WHERE U.username = :userName";
+    public User findByUsername(String username) {
+        String hql = "FROM User U WHERE U.username = :username";
         User u = null;
         try (Session s = sf.openSession()) {
             u = (User) s.createQuery(hql)
-                        .setParameter("userName", userName)
+                        .setParameter("username", username)
                         .getSingleResult();
         } catch (HibernateException ex) {
             // TODO: Log this
@@ -45,5 +44,4 @@ public class UserDAOImpl implements UserDAO {
         // TODO: throw exception
         return null;
     }
-
 }
