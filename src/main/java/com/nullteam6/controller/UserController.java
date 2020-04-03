@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/user")
 public class UserController {
-
     @Autowired
     private UserDAO dao;
 
-    @RequestMapping(value = "{userName}", method = RequestMethod.GET)
-    public @ResponseBody User getUser(@PathVariable String userName) {
-        return dao.findByUserName(userName);
+
+    @RequestMapping(value="{username}", method = RequestMethod.GET)
+    public @ResponseBody User getUser(@PathVariable String username) {
+        return dao.findByUsername(username);
     }
 
     @RequestMapping(method = RequestMethod.POST)
