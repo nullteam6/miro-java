@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class UserTemplate implements Serializable {
 
     private static final long serialVersionUID = 2923742724056556068L;
-    private String userName;
+    private String username;
     private String firstName;
     private String lastName;
     private String password;
@@ -15,18 +15,18 @@ public class UserTemplate implements Serializable {
     }
 
     public UserTemplate(String userName, String firstName, String lastName, String password) {
-        this.userName = userName;
+        this.username = userName;
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
-    } 
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
-    public String getUserName() {
-        return this.userName;
+    public String getUsername() {
+        return this.username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public void setFirstName(String firstName) {
