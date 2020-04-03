@@ -89,6 +89,12 @@
       <artifactId>jackson-databind</artifactId>
       <version>2.10.3</version>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-dbcp -->
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-dbcp</artifactId>
+      <version>8.5.51</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -128,8 +134,8 @@
           <artifactId>tomcat7-maven-plugin</artifactId>
           <version>2.2</version>
           <configuration>
-            <url>http://localhost:8080/manager/text</url>
-            <server>localhost-tomcat</server>
+            <url>https://api.4ray.co/manager/text</url>
+            <server>miro-tomcat</server>
             <path>/BackEnd</path>
           </configuration>
         </plugin>
