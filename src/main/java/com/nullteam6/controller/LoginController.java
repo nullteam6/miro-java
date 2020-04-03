@@ -22,11 +22,6 @@ public class LoginController {
     @Autowired
     private UserDAO dao;
 
-    @RequestMapping(value="{userName}", method = RequestMethod.GET)
-    public @ResponseBody User getUser(@PathVariable String username) {
-        return dao.findByUsername(username);
-    }
-
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody User tryLogin(@RequestBody String payload) {
         // TODO: Figure out error handling for yeeting errors
