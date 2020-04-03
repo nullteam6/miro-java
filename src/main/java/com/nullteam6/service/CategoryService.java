@@ -28,6 +28,25 @@ public class CategoryService {
         return catList;
     }
 
+    public List<Category> getByAnime(int anime) throws IOException {
+        URL url = new URL("https://kitsu.io/api/edge/anime/" + anime + "/categories");
+        KitsuCommand command = new KitsuCommand(null, url);
+        KitsuUtility.getInstance().addToQueue(command);
+        while (KitsuUtility.getInstance().contains(command)) {
+            continue;
+        }
+        String json = command.getPayload().get("data").toString();
+        ObjectMapper mapper = new ObjectMapper();
+        List<CategoryTemplate> templateList = mapper.readValue(json, new TypeReference<List<CategoryTemplate>>() {
+        });
+        List<Category> catList = new ArrayList<>();
+        for (CategoryTemplate t : templateList) {
+            Category c = new Category(t);
+            catList.add(c);
+        }
+        return catList;
+    }
+
     private List<CategoryTemplate> getAllTemplate() throws IOException {
         URL url = new URL("https://kitsu.io/api/edge/categories?page[limit]=" + getCategoryCount());
         KitsuCommand command = new KitsuCommand(null, url);
