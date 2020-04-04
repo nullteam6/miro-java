@@ -42,7 +42,7 @@ public class UserDAOImpl implements UserDAO {
         char[] passwordCharArr = u.getPassword().toCharArray();
         u.setPassword(hasher.hash(passwordCharArr));
 
-        Session s = sf.getCurrentSession();
+        Session s = sessionFactory.getCurrentSession();
         try {
             s.save(u);
             return true;
