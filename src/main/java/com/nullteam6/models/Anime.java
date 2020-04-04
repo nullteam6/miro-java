@@ -1,9 +1,21 @@
 package com.nullteam6.models;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class Anime {
+
+    @Id
     private int id;
+
+    @Column(columnDefinition = "NVARCHAR2(255)")
     private String name;
+
+    @Column(columnDefinition = "NVARCHAR2(2000)")
     private String synopsis;
+
     private String logo;
     private String episodeCount;
     private String showType;

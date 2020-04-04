@@ -16,14 +16,14 @@ public class AnimeController {
 
     @RequestMapping(value = "{search}", method = RequestMethod.GET)
     public @ResponseBody
-    Object getAnime(@PathVariable String search, @RequestParam(name = "offset") int offset) throws IOException {
+    Object getAnime(@PathVariable String search, @RequestParam(name = "offset", required = false) Integer offset) throws IOException {
         if (search.matches("[0-9]+$")) {
             return service.getById(Integer.parseInt(search));
         } else {
-            if (offset != 0) {
-                return service.searchForOffset(search, offset);
+            if (offset == null) {
+                return service.searchForAnime(search);
             }
-            return service.searchForAnime(search);
+            return service.searchForOffset(search, offset);
         }
     }
 }

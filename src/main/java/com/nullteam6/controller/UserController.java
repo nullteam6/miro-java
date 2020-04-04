@@ -30,12 +30,10 @@ public class UserController {
         try {
             userTemplate = mapper.readValue(payload, UserTemplate.class);
         } catch(JsonProcessingException e) {
-            e.getStackTrace();
+            e.printStackTrace();
         }
-        
         if (userTemplate != null) {
-            User u = dao.registerUser(userTemplate);
-            return u;
+            return dao.registerUser(userTemplate);
         } else {
             return null;
         }
