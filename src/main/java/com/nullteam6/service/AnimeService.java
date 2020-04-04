@@ -8,6 +8,7 @@ import com.nullteam6.models.AnimeTemplate;
 import com.nullteam6.utility.KitsuCommand;
 import com.nullteam6.utility.KitsuUtility;
 import com.nullteam6.utility.PaginatedList;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -17,16 +18,25 @@ import java.util.List;
 @Component
 public class AnimeService {
 
+    @Autowired
+    AnimeDAO dao;
+
     public Anime getById(int id) throws IOException {
-        URL url = new URL("https://kitsu.io/api/edge/anime/" + id);
-        KitsuCommand command = new KitsuCommand(null, url);
-        KitsuUtility.getInstance().addToQueue(command);
-        while (KitsuUtility.getInstance().contains(command)) {
-            continue;
+        Anime a = null;
+        a = dao.get(id);
+        if (a == null) {
+            URL url = new URL("https://kitsu.io/api/edge/anime/" + id);
+            KitsuCommand command = new KitsuCommand(null, url);
+            KitsuUtility.getInstance().addToQueue(command);
+            while (KitsuUtility.getInstance().contains(command)) {
+                continue;
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            AnimeTemplate template = mapper.readValue(command.getPayload().get("data").toString(), AnimeTemplate.class);
+            a = new Anime(template);
+            dao.add(a);
         }
-        ObjectMapper mapper = new ObjectMapper();
-        AnimeTemplate template = mapper.readValue(command.getPayload().get("data").toString(), AnimeTemplate.class);
-        return new Anime(template);
+        return a;
     }
 
     public PaginatedList<Anime> searchForAnime(String name) throws IOException {

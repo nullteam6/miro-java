@@ -29,9 +29,8 @@ public class UserController {
         try {
             userTemplate = mapper.readValue(payload, UserTemplate.class);
         } catch(JsonProcessingException e) {
-            e.getStackTrace();
+            e.printStackTrace();
         }
-        
         if (userTemplate != null) {
             dao.registerUser(userTemplate);
             return true;
