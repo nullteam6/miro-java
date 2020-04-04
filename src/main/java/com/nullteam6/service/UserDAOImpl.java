@@ -2,6 +2,7 @@ package com.nullteam6.service;
 
 import com.nullteam6.models.User;
 import com.nullteam6.models.UserTemplate;
+import com.nullteam6.utility.PBKDF2Hasher;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -31,17 +32,23 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     @Transactional
-    public User registerUser(UserTemplate template) {
+    public boolean registerUser(UserTemplate template) {
         User u = new User(template);
-        Session sexy = sf.getCurrentSession();
+
+        // Hash incoming user password
+        PBKDF2Hasher hasher = new PBKDF2Hasher();
+        char[] passwordCharArr = u.getPassword().toCharArray();
+        u.setPassword(hasher.hash(passwordCharArr));
+
+        Session s = sf.getCurrentSession();
         try {
-            sexy.save(u);
-            return u;
+            s.save(u);
+            return true;
         } catch (HibernateException ex) {
             // TODO: Log it real good
             ex.printStackTrace();
         }
         // TODO: throw exception
-        return null;
+        return false;
     }
 }
