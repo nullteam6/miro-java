@@ -79,4 +79,103 @@ public class AnimeService {
         }
         return aniList;
     }
+
+    public PaginatedList<Anime> getByCategory(Integer category) throws Exception {
+        URL url = new URL("https://kitsu.io/api/edge/category/" + category + "/anime");
+        KitsuCommand command = new KitsuCommand(null, url);
+        KitsuUtility.getInstance().addToQueue(command);
+        while (KitsuUtility.getInstance().contains(command)) {
+            continue;
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        List<AnimeTemplate> templateList = mapper.readValue(command.getPayload().get("data").toString(), new TypeReference<List<AnimeTemplate>>() {
+        });
+        PaginatedList<Anime> animeList = new PaginatedList<>();
+        animeList.setNext("10");
+        animeList.setTotalCount(command.getPayload().get("meta").get("count").intValue());
+        animeList.setLast(String.valueOf(animeList.getTotalCount() - 10));
+        for (AnimeTemplate t : templateList) {
+            Anime a = new Anime(t);
+            animeList.add(a);
+        }
+        return animeList;
+    }
+
+    public PaginatedList<Anime> getByCategoryOffset(Integer category, Integer offset) throws Exception {
+        URL url = new URL("https://kitsu.io/api/edge/category/" + category + "/anime?page[offset]=" + offset);
+        KitsuCommand command = new KitsuCommand(null, url);
+        KitsuUtility.getInstance().addToQueue(command);
+        while (KitsuUtility.getInstance().contains(command)) {
+            continue;
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        List<AnimeTemplate> templateList = mapper.readValue(command.getPayload().get("data").toString(), new TypeReference<List<AnimeTemplate>>() {
+        });
+        PaginatedList<Anime> animeList = new PaginatedList<>();
+        animeList.setNext(String.valueOf(offset + 10));
+        animeList.setTotalCount(command.getPayload().get("meta").get("count").intValue());
+        animeList.setLast(String.valueOf(animeList.getTotalCount() - 10));
+        for (AnimeTemplate t : templateList) {
+            Anime a = new Anime(t);
+            animeList.add(a);
+        }
+        return animeList;
+    }
+
+    /**
+     * Returns the beginning page of the entire Kitsu anime collection.
+     * <b>Use with great caution</b>
+     *
+     * @return The start of the end of your life
+     * @throws Exception Possibility of yeeting a JsonProcessingException and a MalformedURLException
+     */
+    public PaginatedList<Anime> jeanCena() throws Exception {
+        URL url = new URL("https://kitsu.io/api/edge/anime");
+        KitsuCommand command = new KitsuCommand(null, url);
+        KitsuUtility.getInstance().addToQueue(command);
+        while (KitsuUtility.getInstance().contains(command)) {
+            continue;
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        List<AnimeTemplate> templateList = mapper.readValue(command.getPayload().get("data").toString(), new TypeReference<List<AnimeTemplate>>() {
+        });
+        PaginatedList<Anime> animeList = new PaginatedList<>();
+        animeList.setNext("10");
+        animeList.setTotalCount(command.getPayload().get("meta").get("count").intValue());
+        animeList.setLast(String.valueOf(animeList.getTotalCount() - 10));
+        for (AnimeTemplate t : templateList) {
+            Anime a = new Anime(t);
+            animeList.add(a);
+        }
+        return animeList;
+    }
+
+    /**
+     * You didn't read the JavaDocs for this class and
+     * now you're back for more?
+     *
+     * @param offset the starting entry for the page to be constructed
+     * @return Cheetos and lots of them
+     * @throws Exception Possibility of yeeting a JsonProcessingException and a MalformedURLException
+     */
+    public PaginatedList<Anime> downTheRabbitHole(Integer offset) throws Exception {
+        URL url = new URL("https://kitso.io/api/edge/anime?page[offset]=" + offset);
+        KitsuCommand command = new KitsuCommand(null, url);
+        KitsuUtility.getInstance().addToQueue(command);
+        while (KitsuUtility.getInstance().contains(command)) {
+            continue;
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        List<AnimeTemplate> templateList = mapper.readValue(command.getPayload().get("data").toString(), new TypeReference<List<AnimeTemplate>>() {
+        });
+        PaginatedList<Anime> animeList = new PaginatedList<>();
+        animeList.setNext(String.valueOf(offset + 10));
+        animeList.setTotalCount(command.getPayload().get("meta").get("count").intValue());
+        animeList.setLast(String.valueOf(animeList.getTotalCount() - 10));
+        for (AnimeTemplate t : templateList) {
+            Anime a = new Anime(t);
+            animeList.add(a);
+        }
+        return animeList;
+    }
 }
