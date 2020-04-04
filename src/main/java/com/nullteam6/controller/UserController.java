@@ -15,14 +15,13 @@ public class UserController {
     @Autowired
     private UserDAO dao;
 
-
     @RequestMapping(value="{username}", method = RequestMethod.GET)
     public @ResponseBody User getUser(@PathVariable String username) {
         return dao.findByUsername(username);
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public @ResponseBody User registerUser(@RequestBody String payload) {
+    public @ResponseBody boolean registerUser(@RequestBody String payload) {
         // TODO: Figure out error handling for yeeting errors
         ObjectMapper mapper = new ObjectMapper();
         UserTemplate userTemplate = null;
@@ -33,9 +32,10 @@ public class UserController {
             e.printStackTrace();
         }
         if (userTemplate != null) {
-            return dao.registerUser(userTemplate);
+            dao.registerUser(userTemplate);
+            return true;
         } else {
-            return null;
+            return false;
         }
     }
 }
