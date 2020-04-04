@@ -7,7 +7,14 @@ import java.util.List;
 public class AnimeBacklog {
 
     @ManyToMany(fetch = FetchType.EAGER)
-    List<Anime> animelist;
+    List<Anime> backlist;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    List<Anime> inProgList;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    List<Anime> finishedList;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
@@ -15,8 +22,28 @@ public class AnimeBacklog {
     @ManyToOne
     private User user;
 
-    public AnimeBacklog() {
-        super();
+    public List<Anime> getBacklist() {
+        return backlist;
+    }
+
+    public void setBacklist(List<Anime> backlist) {
+        this.backlist = backlist;
+    }
+
+    public List<Anime> getInProgList() {
+        return inProgList;
+    }
+
+    public void setInProgList(List<Anime> inProgList) {
+        this.inProgList = inProgList;
+    }
+
+    public List<Anime> getFinishedList() {
+        return finishedList;
+    }
+
+    public void setFinishedList(List<Anime> finishedList) {
+        this.finishedList = finishedList;
     }
 
     public int getId() {
@@ -43,12 +70,17 @@ public class AnimeBacklog {
         this.user = user;
     }
 
-    public List<Anime> getAnimelist() {
-        return animelist;
+    public void removeFromList(Anime anime) {
+        if (backlist != null)
+            backlist.remove(anime);
+        if (inProgList != null)
+            inProgList.remove(anime);
+        if (finishedList != null)
+            finishedList.remove(anime);
     }
 
-    public void setAnimelist(List<Anime> animelist) {
-        this.animelist = animelist;
+    public void addToList(Anime anime) {
+        if (!backlist.contains(anime))
+            backlist.add(anime);
     }
-
 }

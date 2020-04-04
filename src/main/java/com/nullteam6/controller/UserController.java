@@ -28,7 +28,7 @@ public class UserController {
 
         try {
             userTemplate = mapper.readValue(payload, UserTemplate.class);
-        } catch(JsonProcessingException e) {
+        } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
         if (userTemplate != null) {
@@ -37,5 +37,18 @@ public class UserController {
         } else {
             return false;
         }
+    }
+
+    @PutMapping
+    public @ResponseBody
+    boolean updateUser(@RequestBody String payload) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            User u = mapper.readValue(payload, User.class);
+            dao.updateUser(u);
+        } catch (JsonProcessingException ex) {
+            return false;
+        }
+        return true;
     }
 }
