@@ -41,9 +41,28 @@ public class AnimeService {
         });
         PaginatedList<Anime> aniList = new PaginatedList<>();
         aniList.setTotalCount(command.getPayload().get("meta").get("count").intValue());
-        aniList.setFirst(command.getPayload().get("links").get("first").toString());
-        aniList.setNext(command.getPayload().get("links").get("next").toString());
-        aniList.setLast(command.getPayload().get("links").get("last").toString());
+        aniList.setNext("10");
+        aniList.setLast(String.valueOf(aniList.getTotalCount() - 10));
+        for (AnimeTemplate t : templateList) {
+            Anime a = new Anime(t);
+            aniList.add(a);
+        }
+        return aniList;
+    }
+
+    public PaginatedList<Anime> searchForOffset(String name, int offset) throws IOException {
+        URL url = new URL("https://kitsu.io/api/edge/anime?filter[text]=" + name.replaceAll(" ", "%20") + "&page[offset]=" + offset);
+        KitsuCommand command = new KitsuCommand(null, url);
+        KitsuUtility.getInstance().addToQueue(command);
+        while (KitsuUtility.getInstance().contains(command)) {
+            continue;
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        List<AnimeTemplate> templateList = mapper.readValue(command.getPayload().get("data").toString(), new TypeReference<List<AnimeTemplate>>() {
+        });
+        PaginatedList<Anime> aniList = new PaginatedList<>();
+        aniList.setNext(String.valueOf(offset + 10));
+        aniList.setTotalCount(command.getPayload().get("meta").get("count").intValue());
         for (AnimeTemplate t : templateList) {
             Anime a = new Anime(t);
             aniList.add(a);

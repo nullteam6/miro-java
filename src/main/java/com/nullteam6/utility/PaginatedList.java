@@ -5,7 +5,6 @@ import java.util.List;
 
 public class PaginatedList<T> {
     private int totalCount;
-    private String first;
     private String next;
     private String last;
     private List<T> data;
@@ -20,14 +19,6 @@ public class PaginatedList<T> {
 
     public void setTotalCount(int totalCount) {
         this.totalCount = totalCount;
-    }
-
-    public String getFirst() {
-        return first;
-    }
-
-    public void setFirst(String first) {
-        this.first = first;
     }
 
     public String getNext() {
