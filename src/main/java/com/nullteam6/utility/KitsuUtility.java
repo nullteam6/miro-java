@@ -48,7 +48,7 @@ public class KitsuUtility {
 }
 
 class KitsuDaemon implements Runnable {
-    private static final int RATE_LIMIT = 333;
+    private static final int RATE_LIMIT = 300;
     private BlockingQueue<KitsuCommand> queue;
 
     public KitsuDaemon(BlockingQueue<KitsuCommand> queue) {
