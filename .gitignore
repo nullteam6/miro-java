@@ -4,6 +4,8 @@
 ### Null Team 6 Specific ###
 src/main/webapp/WEB-INF/BackEnd-servlet.xml
 .vscode
+.DS_Store
+**/.DS_Store
 
 ### Eclipse ###
 .metadata
