@@ -14,19 +14,17 @@ public class User {
     private String username;
     private String password;
     private boolean admin;
-    private List<User> friend;
 
     public User() {
         super();
     }
 
-    public User(String firstName, String lastName, String username, String password, boolean admin, List<User> friend) {
+    public User(String firstName, String lastName, String username, String password, boolean admin) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.password = password;
         this.admin = admin;
-        this.friend=friend;
     }
 
     public User(UserTemplate template) {
@@ -34,7 +32,6 @@ public class User {
         this.lastName = template.getLastName();
         this.username = template.getUsername();
         this.password = template.getPassword();
-        this.friend = template.getFriend();
         this.admin = false;
     }
 
@@ -85,13 +82,4 @@ public class User {
     public void setAdmin(boolean admin) {
         this.admin = admin;
     }
-    public User getFriend(List<User> friend)
-    {
-        return friend;
-    }
-    public void setFriend(List<User> friend)
-    {
-        this.friend=friend;
-    }
-
 }
