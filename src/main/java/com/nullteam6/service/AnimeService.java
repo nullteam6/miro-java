@@ -18,11 +18,16 @@ import java.util.List;
 @Component
 public class AnimeService {
 
+    private static final String COUNT = "count";
+    private AnimeDAO dao;
+
     @Autowired
-    AnimeDAO dao;
+    public void setDao(AnimeDAO dao) {
+        this.dao = dao;
+    }
 
     public Anime getById(int id) throws IOException {
-        Anime a = null;
+        Anime a;
         a = dao.get(id);
         if (a == null) {
             URL url = new URL("https://kitsu.io/api/edge/anime/" + id);
@@ -50,7 +55,7 @@ public class AnimeService {
         List<AnimeTemplate> templateList = mapper.readValue(command.getPayload().get("data").toString(), new TypeReference<List<AnimeTemplate>>() {
         });
         PaginatedList<Anime> aniList = new PaginatedList<>();
-        aniList.setTotalCount(command.getPayload().get("meta").get("count").intValue());
+        aniList.setTotalCount(command.getPayload().get("meta").get(COUNT).intValue());
         aniList.setNext("10");
         aniList.setLast(String.valueOf(aniList.getTotalCount() - 10));
         for (AnimeTemplate t : templateList) {
@@ -61,7 +66,7 @@ public class AnimeService {
     }
 
     public PaginatedList<Anime> searchForOffset(String name, int offset) throws IOException {
-        URL url = new URL("https://kitsu.io/api/edge/anime?filter[text]=" + name.replaceAll(" ", "%20") + "&page[offset]=" + offset);
+        URL url = new URL("https://kitsu.io/api/edge/anime?filter[text]=" + name.replace(" ", "%20") + "&page[offset]=" + offset);
         KitsuCommand command = new KitsuCommand(null, url);
         KitsuUtility.getInstance().addToQueue(command);
         while (KitsuUtility.getInstance().contains(command)) {
@@ -72,7 +77,7 @@ public class AnimeService {
         });
         PaginatedList<Anime> aniList = new PaginatedList<>();
         aniList.setNext(String.valueOf(offset + 10));
-        aniList.setTotalCount(command.getPayload().get("meta").get("count").intValue());
+        aniList.setTotalCount(command.getPayload().get("meta").get(COUNT).intValue());
         for (AnimeTemplate t : templateList) {
             Anime a = new Anime(t);
             aniList.add(a);
@@ -80,7 +85,7 @@ public class AnimeService {
         return aniList;
     }
 
-    public PaginatedList<Anime> getByCategory(Integer category) throws Exception {
+    public PaginatedList<Anime> getByCategory(Integer category) throws IOException {
         URL url = new URL("https://kitsu.io/api/edge/category/" + category + "/anime");
         KitsuCommand command = new KitsuCommand(null, url);
         KitsuUtility.getInstance().addToQueue(command);
@@ -92,7 +97,7 @@ public class AnimeService {
         });
         PaginatedList<Anime> animeList = new PaginatedList<>();
         animeList.setNext("10");
-        animeList.setTotalCount(command.getPayload().get("meta").get("count").intValue());
+        animeList.setTotalCount(command.getPayload().get("meta").get(COUNT).intValue());
         animeList.setLast(String.valueOf(animeList.getTotalCount() - 10));
         for (AnimeTemplate t : templateList) {
             Anime a = new Anime(t);
@@ -101,7 +106,7 @@ public class AnimeService {
         return animeList;
     }
 
-    public PaginatedList<Anime> getByCategoryOffset(Integer category, Integer offset) throws Exception {
+    public PaginatedList<Anime> getByCategoryOffset(Integer category, Integer offset) throws IOException {
         URL url = new URL("https://kitsu.io/api/edge/category/" + category + "/anime?page[offset]=" + offset);
         KitsuCommand command = new KitsuCommand(null, url);
         KitsuUtility.getInstance().addToQueue(command);
@@ -113,7 +118,7 @@ public class AnimeService {
         });
         PaginatedList<Anime> animeList = new PaginatedList<>();
         animeList.setNext(String.valueOf(offset + 10));
-        animeList.setTotalCount(command.getPayload().get("meta").get("count").intValue());
+        animeList.setTotalCount(command.getPayload().get("meta").get(COUNT).intValue());
         animeList.setLast(String.valueOf(animeList.getTotalCount() - 10));
         for (AnimeTemplate t : templateList) {
             Anime a = new Anime(t);
@@ -129,7 +134,7 @@ public class AnimeService {
      * @return The start of the end of your life
      * @throws Exception Possibility of yeeting a JsonProcessingException and a MalformedURLException
      */
-    public PaginatedList<Anime> jeanCena() throws Exception {
+    public PaginatedList<Anime> jeanCena() throws IOException {
         URL url = new URL("https://kitsu.io/api/edge/anime");
         KitsuCommand command = new KitsuCommand(null, url);
         KitsuUtility.getInstance().addToQueue(command);
@@ -141,7 +146,7 @@ public class AnimeService {
         });
         PaginatedList<Anime> animeList = new PaginatedList<>();
         animeList.setNext("10");
-        animeList.setTotalCount(command.getPayload().get("meta").get("count").intValue());
+        animeList.setTotalCount(command.getPayload().get("meta").get(COUNT).intValue());
         animeList.setLast(String.valueOf(animeList.getTotalCount() - 10));
         for (AnimeTemplate t : templateList) {
             Anime a = new Anime(t);
@@ -156,9 +161,9 @@ public class AnimeService {
      *
      * @param offset the starting entry for the page to be constructed
      * @return Cheetos and lots of them
-     * @throws Exception Possibility of yeeting a JsonProcessingException and a MalformedURLException
+     * @throws Exception Possibility of yeeting an IOException
      */
-    public PaginatedList<Anime> downTheRabbitHole(Integer offset) throws Exception {
+    public PaginatedList<Anime> downTheRabbitHole(Integer offset) throws IOException {
         URL url = new URL("https://kitso.io/api/edge/anime?page[offset]=" + offset);
         KitsuCommand command = new KitsuCommand(null, url);
         KitsuUtility.getInstance().addToQueue(command);
@@ -170,7 +175,7 @@ public class AnimeService {
         });
         PaginatedList<Anime> animeList = new PaginatedList<>();
         animeList.setNext(String.valueOf(offset + 10));
-        animeList.setTotalCount(command.getPayload().get("meta").get("count").intValue());
+        animeList.setTotalCount(command.getPayload().get("meta").get(COUNT).intValue());
         animeList.setLast(String.valueOf(animeList.getTotalCount() - 10));
         for (AnimeTemplate t : templateList) {
             Anime a = new Anime(t);

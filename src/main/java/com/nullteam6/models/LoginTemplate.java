@@ -45,4 +45,12 @@ public class LoginTemplate implements Serializable {
     public int hashCode() {
         return Objects.hash(username, password);
     }
+
+    @Override
+    public String toString() {
+        return "LoginTemplate{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }

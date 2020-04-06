@@ -13,9 +13,12 @@ import javax.transaction.Transactional;
 @Transactional
 public class AnimeBacklogDAOImpl implements AnimeBacklogDAO {
 
-    @Autowired
     SessionFactory sessionFactory;
 
+    @Autowired
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
     @Override
     public AnimeBacklog getById(int id) {
