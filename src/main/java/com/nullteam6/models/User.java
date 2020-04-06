@@ -33,9 +33,11 @@ public class User {
     @Transient
     private Profile profile;
 
+
     public User() {
         super();
     }
+
 
     public User(Name dn, String firstName, String lastName, String entryId, String uid, String mail, Profile profile) {
         this.dn = dn;
@@ -45,6 +47,7 @@ public class User {
         this.uid = uid;
         this.mail = mail;
         this.profile = profile;
+
     }
 
     public Name getDn() {
@@ -135,3 +138,4 @@ public class User {
                 '}';
     }
 }
+
