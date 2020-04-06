@@ -37,10 +37,10 @@ public class CategoryService {
         }
         String json = command.getPayload().get("data").toString();
         ObjectMapper mapper = new ObjectMapper();
-        List<CategoryTemplate> templateList = mapper.readValue(json, new TypeReference<List<CategoryTemplate>>() {
+        List<CategoryTemplate> tList = mapper.readValue(json, new TypeReference<List<CategoryTemplate>>() {
         });
         List<Category> catList = new ArrayList<>();
-        for (CategoryTemplate t : templateList) {
+        for (CategoryTemplate t : tList) {
             Category c = new Category(t);
             catList.add(c);
         }

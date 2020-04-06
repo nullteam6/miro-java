@@ -4,36 +4,55 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nullteam6.models.User;
 import com.nullteam6.models.UserTemplate;
-import com.nullteam6.service.UserDAO;
+import com.nullteam6.service.UserDAOImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.security.NoSuchAlgorithmException;
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
-    @Autowired
-    private UserDAO dao;
 
-    @RequestMapping(value="{username}", method = RequestMethod.GET)
-    public @ResponseBody User getUser(@PathVariable String username) {
+    private UserDAOImpl dao;
+    private Logger logger = LogManager.getLogger();
+
+    @Autowired
+    public void setDao(UserDAOImpl dao) {
+        this.dao = dao;
+    }
+
+    @GetMapping(value = "{username}")
+    public @ResponseBody
+    User getUser(@PathVariable String username) {
         return dao.findByUsername(username);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public @ResponseBody boolean registerUser(@RequestBody String payload) {
-        // TODO: Figure out error handling for yeeting errors
+    @PostMapping
+    public @ResponseBody
+    boolean registerUser(@RequestBody String payload) {
         ObjectMapper mapper = new ObjectMapper();
-        UserTemplate userTemplate = null;
+        UserTemplate userTemplate;
 
         try {
             userTemplate = mapper.readValue(payload, UserTemplate.class);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            logger.debug(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
         }
         if (userTemplate != null) {
-            dao.registerUser(userTemplate);
-            return true;
+            try {
+                dao.registerUser(userTemplate);
+                return true;
+            } catch (NoSuchAlgorithmException ex) {
+                logger.debug(ex.getMessage());
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
         } else {
             return false;
         }

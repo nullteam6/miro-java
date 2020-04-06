@@ -15,10 +15,15 @@ import java.io.IOException;
 @RequestMapping("/animebacklog")
 public class AnimeBacklogController {
 
-    @Autowired
+
     private AnimeBacklogDAO dao;
 
-    @RequestMapping(value = "{id}", method = RequestMethod.GET)
+    @Autowired
+    public void setAnimeBacklogDAO(AnimeBacklogDAO dao) {
+        this.dao = dao;
+    }
+
+    @GetMapping(value = "{id}")
     public @ResponseBody
     Object getBackLog(@PathVariable String id) {
         return dao.getById(Integer.parseInt(id));
@@ -37,7 +42,7 @@ public class AnimeBacklogController {
         return true;
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.PUT)
+    @PutMapping(value = "{id}")
     public @ResponseBody
     boolean addToBacklog(@PathVariable int id, @RequestBody String payload) {
         AnimeBacklog backlog = dao.getById(id);
@@ -52,7 +57,7 @@ public class AnimeBacklogController {
         return true;
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public @ResponseBody
     boolean createBacklog(@RequestBody String payload) throws IOException {
         ObjectMapper mapper = new ObjectMapper();

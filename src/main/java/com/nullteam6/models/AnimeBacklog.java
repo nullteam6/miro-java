@@ -19,8 +19,6 @@ public class AnimeBacklog {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String name;
-    @ManyToOne
-    private User user;
 
     public List<Anime> getBacklist() {
         return backlist;
@@ -60,14 +58,6 @@ public class AnimeBacklog {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public void removeFromList(Anime anime) {

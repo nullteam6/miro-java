@@ -1,31 +1,48 @@
 package com.nullteam6.controller;
 
 import com.nullteam6.service.AnimeService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/anime")
 public class AnimeController {
 
+    private AnimeService service;
+    private Logger logger = LogManager.getLogger();
+
     @Autowired
-    AnimeService service;
+    public void setService(AnimeService service) {
+        this.service = service;
+    }
 
     @GetMapping
     public @ResponseBody
     Object getAnime(
             @RequestParam(name = "offset", required = false) Integer offset,
-            @RequestParam(name = "category", required = false) Integer category
-    ) throws Exception {
-        if (category != null && offset == null) {
-            return service.getByCategory(category);
-        } else if (category != null && offset != null) {
-            return service.getByCategoryOffset(category, offset);
-        } else if (category == null && offset != null) {
-            return service.downTheRabbitHole(offset);
-        } else {
-            return service.jeanCena();
+            @RequestParam(name = "category", required = false) Integer category) {
+
+        try {
+            if (category != null) {
+                if (offset == null)
+                    return service.getByCategory(category);
+                else
+                    return service.getByCategoryOffset(category, offset);
+            } else if (offset != null) {
+                return service.downTheRabbitHole(offset);
+            } else {
+                return service.jeanCena();
+            }
+        } catch (IOException ex) {
+            logger.debug(ex.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -34,7 +51,7 @@ public class AnimeController {
     Object searchAnime(
             @PathVariable String search,
             @RequestParam(name = "offset", required = false) Integer offset,
-            @RequestParam(name = "category", required = false) Integer category) throws Exception {
+            @RequestParam(name = "category", required = false) Integer category) throws IOException {
         if (search.matches("[0-9]+$")) {
             return service.getById(Integer.parseInt(search));
         } else if (category == null && offset == null) {

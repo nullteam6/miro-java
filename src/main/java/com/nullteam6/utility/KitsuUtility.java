@@ -1,6 +1,8 @@
 package com.nullteam6.utility;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -50,6 +52,7 @@ public class KitsuUtility {
 class KitsuDaemon implements Runnable {
     private static final int RATE_LIMIT = 300;
     private BlockingQueue<KitsuCommand> queue;
+    protected Logger logger = LogManager.getLogger();
 
     public KitsuDaemon(BlockingQueue<KitsuCommand> queue) {
         this.queue = queue;
@@ -61,16 +64,16 @@ class KitsuDaemon implements Runnable {
             try {
                 KitsuCommand command = queue.remove();
                 synchronized (command) {
-                    System.out.println("Daemon executing task");
                     executeCommand(command);
                 }
             } catch (IOException ex) {
-                ex.printStackTrace();
+                logger.debug(ex.getMessage());
             }
             try {
                 Thread.sleep(RATE_LIMIT);
             } catch (InterruptedException ex) {
-                ex.printStackTrace();
+                logger.debug(ex.getMessage());
+                Thread.currentThread().interrupt();
             }
         }
     }

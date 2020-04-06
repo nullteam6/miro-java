@@ -20,6 +20,12 @@
    <mvc:cors>
      <mvc:mapping path="/**" />
    </mvc:cors>
+      <ldap:context-source
+              url="[CHANGE-ME]"
+              base="[CHANGE-ME]"
+              username="[CHANGE-ME]"
+              password="[CHANGE-ME]" />
+      <ldap:ldap-template id="ldapTemplate" />
 
    <bean id="dataSource" class="org.apache.tomcat.dbcp.dbcp2.BasicDataSource">
       <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
