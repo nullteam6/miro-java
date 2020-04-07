@@ -5,12 +5,12 @@ import java.util.List;
 
 @Entity
 public class Profile {
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     List<AnimeBacklog> aniBacklogList;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    @Column(unique = true)
+    @Column(name = "user_uid", unique = true)
     private String uid;
     private String description;
 
