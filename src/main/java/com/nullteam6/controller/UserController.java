@@ -2,7 +2,6 @@ package com.nullteam6.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nullteam6.models.LoginTemplate;
 import com.nullteam6.models.User;
 import com.nullteam6.models.UserTemplate;
 import com.nullteam6.service.UserDAOImpl;
@@ -57,25 +56,6 @@ public class UserController {
         } else {
             return false;
         }
-    }
-
-    @PostMapping(value = "{username}")
-    public @ResponseBody
-    boolean login(@PathVariable String username, @RequestBody String payload) {
-        ObjectMapper mapper = new ObjectMapper();
-        LoginTemplate loginTemplate;
-        boolean success = false;
-        try {
-            loginTemplate = mapper.readValue(payload, LoginTemplate.class);
-            if (loginTemplate.getUsername().equals(username))
-                success = dao.authenticate(loginTemplate);
-        } catch (JsonProcessingException ex) {
-            logger.debug(ex.getMessage());
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        } catch (NoSuchAlgorithmException nex) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return success;
     }
 
     @PutMapping
