@@ -9,7 +9,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class ProfileDAOImpl implements ProfileDAO {
@@ -24,7 +23,7 @@ public class ProfileDAOImpl implements ProfileDAO {
 
     @Override
     public Profile getProfileByUID(String uid) {
-        String hql = "FROM Profile P WHERE p.uid = :uid";
+        String hql = "FROM Profile P WHERE P.uid = :uid";
         Profile p;
         try (Session s = sessionFactory.openSession()) {
             p = (Profile) s.createQuery(hql)
@@ -49,10 +48,12 @@ public class ProfileDAOImpl implements ProfileDAO {
     }
 
     @Override
-    @Transactional
     public boolean createProfile(Profile profile) {
         try (Session s = sessionFactory.openSession()) {
+            Transaction tx = s.beginTransaction();
             s.save(profile);
+            s.flush();
+            tx.commit();
             return true;
         } catch (HibernateException ex) {
             logger.info(ex.getMessage());
