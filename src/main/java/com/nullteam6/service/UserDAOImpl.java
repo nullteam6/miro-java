@@ -89,6 +89,7 @@ public class UserDAOImpl implements UserDAO {
         LdapTemplate ldapTemplate1 = new LdapTemplate(contextSource);
         try {
             ldapTemplate1.afterPropertiesSet();
+            ldapTemplate1.lookup(dn);
             return true;
         } catch (Exception ex) {
             logger.info(ex.toString());
