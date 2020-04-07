@@ -14,6 +14,7 @@ import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.support.LdapNameBuilder;
 
 import javax.naming.Name;
+import javax.persistence.NoResultException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -44,7 +45,7 @@ public class UserDAOImpl implements UserDAO {
         Profile p;
         try {
             p = profileDAO.getProfileByUID(uid);
-        } catch (IllegalArgumentException ex) {
+        } catch (NoResultException ex) {
             p = new Profile();
             p.setUid(uid);
             profileDAO.createProfile(p);

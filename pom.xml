@@ -147,7 +147,7 @@
           <artifactId>tomcat7-maven-plugin</artifactId>
           <version>2.2</version>
           <configuration>
-            <url>https://api.4ray.co/manager/text</url>
+            <url>https://miro.4ray.co/manager/text</url>
             <server>miro-tomcat</server>
             <path>/BackEnd</path>
           </configuration>
