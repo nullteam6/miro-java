@@ -7,9 +7,9 @@
         <SystemdJournal name="journal" logStacktrace="true" logSource="false" />
     </Appenders>
     <Loggers>
-        <Root level="DEBUG">
-            <AppenderRef ref="console"/>
-            <AppenderRef ref="journal"/>
+        <Root level="INFO">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="journal" />
         </Root>
         <!--><Logger name="log4j.logger.org.springframework.security" level="DEBUG" additivity="true"/>-->
     </Loggers>
