@@ -11,5 +11,6 @@
             <AppenderRef ref="console" />
             <AppenderRef ref="journal" />
         </Root>
+        <!--><Logger name="log4j.logger.org.springframework.security" level="DEBUG" additivity="true"/>-->
     </Loggers>
 </Configuration>
