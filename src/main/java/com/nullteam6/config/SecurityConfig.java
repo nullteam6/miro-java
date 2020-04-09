@@ -40,6 +40,7 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/user*").hasRole("USER")
+                .antMatchers("/animebacklog").hasRole("USER")
                 .anyRequest().permitAll();
     }
 }

@@ -1,5 +1,6 @@
 package com.nullteam6.controller;
 
+import com.nullteam6.models.Anime;
 import com.nullteam6.service.AnimeService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/anime")
@@ -42,6 +44,12 @@ public class AnimeController {
             logger.debug(ex.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping(value = "/trending")
+    public @ResponseBody
+    List<Anime> getTrending() throws Exception {
+        return service.getTrending();
     }
 
     @GetMapping(value = "/{search}")

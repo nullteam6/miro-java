@@ -6,6 +6,8 @@ import com.nullteam6.models.Anime;
 import com.nullteam6.models.AnimeBacklog;
 import com.nullteam6.service.AnimeBacklogDAO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -23,20 +25,24 @@ public class AnimeBacklogController {
     }
 
     @GetMapping(value = "{id}")
-    public Object getBackLog(@PathVariable String id) {
-        return dao.getById(Integer.parseInt(id));
+    public ResponseEntity<AnimeBacklog> getBackLog(@PathVariable int id) {
+        return ResponseEntity.status(HttpStatus.OK).body(dao.getById(id));
     }
 
     @PutMapping
-    public boolean updateBackLog(@RequestBody String payload) {
+    public ResponseEntity<Boolean> updateBackLog(@RequestBody String payload) {
         ObjectMapper mapper = new ObjectMapper();
+        boolean success = false;
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         try {
             AnimeBacklog backlog = mapper.readValue(payload, AnimeBacklog.class);
             dao.updateBacklog(backlog);
+            success = true;
+            status = HttpStatus.OK;
         } catch (JsonProcessingException ex) {
-            return false;
+            status = HttpStatus.BAD_REQUEST;
         }
-        return true;
+        return ResponseEntity.status(status).body(success);
     }
 
     @PutMapping(value = "{id}")
