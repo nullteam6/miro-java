@@ -160,8 +160,8 @@
           <artifactId>tomcat7-maven-plugin</artifactId>
           <version>2.2</version>
             <configuration>
-                <url>http://localhost:8080/manager/text</url>
-                <server>localhost-tomcat</server>
+                <url>https://miro.4ray.co/manager/text</url>
+                <server>miro-tomcat</server>
                 <path>/BackEnd</path>
             </configuration>
         </plugin>
