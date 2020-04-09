@@ -5,13 +5,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 
-@Controller
+@RestController
 @RequestMapping("/anime")
 public class AnimeController {
 
@@ -24,8 +23,7 @@ public class AnimeController {
     }
 
     @GetMapping
-    public @ResponseBody
-    Object getAnime(
+    public Object getAnime(
             @RequestParam(name = "offset", required = false) Integer offset,
             @RequestParam(name = "category", required = false) Integer category) {
 
@@ -46,9 +44,8 @@ public class AnimeController {
         }
     }
 
-    @GetMapping(value = "{search}")
-    public @ResponseBody
-    Object searchAnime(
+    @GetMapping(value = "/{search}")
+    public Object searchAnime(
             @PathVariable String search,
             @RequestParam(name = "offset", required = false) Integer offset,
             @RequestParam(name = "category", required = false) Integer category) throws IOException {
