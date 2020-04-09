@@ -31,7 +31,8 @@ public class Anime {
         this.id = template.getId();
         this.name = template.getAttributes().get("canonicalTitle").toString();
         this.synopsis = template.getAttributes().get("synopsis").toString();
-        this.logo = template.getAttributes().get("posterImage").get("original").toString();
+        if (!template.getAttributes().get("posterImage").isNull())
+            this.logo = template.getAttributes().get("posterImage").get("original").toString();
         this.episodeCount = template.getAttributes().get("episodeCount").toString();
         this.showType = template.getAttributes().get("showType").toString();
         this.status = template.getAttributes().get("status").toString();
