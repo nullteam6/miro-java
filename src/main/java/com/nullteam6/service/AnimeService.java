@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -120,6 +121,24 @@ public class AnimeService {
         animeList.setNext(String.valueOf(offset + 10));
         animeList.setTotalCount(command.getPayload().get("meta").get(COUNT).intValue());
         animeList.setLast(String.valueOf(animeList.getTotalCount() - 10));
+        for (AnimeTemplate t : templateList) {
+            Anime a = new Anime(t);
+            animeList.add(a);
+        }
+        return animeList;
+    }
+
+    public List<Anime> getTrending() throws IOException {
+        URL url = new URL("https://kitsu.io/api/edge/trending/anime");
+        KitsuCommand command = new KitsuCommand(null, url);
+        KitsuUtility.getInstance().addToQueue(command);
+        while (KitsuUtility.getInstance().contains(command)) {
+            continue;
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        List<AnimeTemplate> templateList = mapper.readValue(command.getPayload().get("data").toString(), new TypeReference<List<AnimeTemplate>>() {
+        });
+        List<Anime> animeList = new ArrayList<>();
         for (AnimeTemplate t : templateList) {
             Anime a = new Anime(t);
             animeList.add(a);
