@@ -87,7 +87,7 @@ public class AnimeService {
     }
 
     public PaginatedList<Anime> getByCategory(Integer category) throws IOException {
-        URL url = new URL("https://kitsu.io/api/edge/category/" + category + "/anime");
+        URL url = new URL("https://kitsu.io/api/edge/categories/" + category + "/anime");
         KitsuCommand command = new KitsuCommand(null, url);
         KitsuUtility.getInstance().addToQueue(command);
         while (KitsuUtility.getInstance().contains(command)) {
