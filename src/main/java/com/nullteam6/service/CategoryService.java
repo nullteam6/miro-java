@@ -1,5 +1,6 @@
 package com.nullteam6.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nullteam6.models.Category;
@@ -43,15 +44,9 @@ public class CategoryService {
      */
     public List<Category> getByAnime(int anime) throws IOException {
         URL url = new URL("https://kitsu.io/api/edge/anime/" + anime + "/categories");
-        KitsuCommand command = new KitsuCommand(null, url);
-        KitsuUtility.getInstance().addToQueue(command);
-        while (KitsuUtility.getInstance().contains(command)) {
-            continue;
-        }
-        String json = command.getPayload().get("data").toString();
-        ObjectMapper mapper = new ObjectMapper();
-        List<CategoryTemplate> tList = mapper.readValue(json, new TypeReference<List<CategoryTemplate>>() {
-        });
+        int count = getCategoryCountByURL(url);
+        URL url2 = new URL("https://kitsu.io/api/edge/anime/" + anime + "/categories?page[limit]=" + count);
+        List<CategoryTemplate> tList = getAllTemplateByURL(url2);
         List<Category> catList = new ArrayList<>();
         for (CategoryTemplate t : tList) {
             Category c = new Category(t);
@@ -68,11 +63,23 @@ public class CategoryService {
      */
     private List<CategoryTemplate> getAllTemplate() throws IOException {
         URL url = new URL("https://kitsu.io/api/edge/categories?page[limit]=" + getCategoryCount());
+        return getAllTemplateByURL(url);
+    }
+
+    /**
+     * Gets a list of all categories from a particular URL on kitsu;
+     *
+     * @param url the url to grab
+     * @return returns the list of categorytemplates
+     * @throws JsonProcessingException from ObjectMapper
+     */
+    private List<CategoryTemplate> getAllTemplateByURL(URL url) throws JsonProcessingException {
         KitsuCommand command = new KitsuCommand(null, url);
         KitsuUtility.getInstance().addToQueue(command);
         while (KitsuUtility.getInstance().contains(command)) {
             continue;
         }
+        System.out.println(command.getPayload());
         String json = command.getPayload().get("data").toString();
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(json, new TypeReference<List<CategoryTemplate>>() {
@@ -87,6 +94,16 @@ public class CategoryService {
      */
     private int getCategoryCount() throws IOException {
         URL url = new URL("https://kitsu.io/api/edge/categories");
+        return getCategoryCountByURL(url);
+    }
+
+    /**
+     * Gets the number of categories associated with a URL
+     *
+     * @param url the category list URL
+     * @return the number of categories
+     */
+    private int getCategoryCountByURL(URL url) {
         KitsuCommand command = new KitsuCommand(null, url);
         KitsuUtility.getInstance().addToQueue(command);
         while (KitsuUtility.getInstance().contains(command)) {
