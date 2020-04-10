@@ -9,36 +9,45 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.NoSuchAlgorithmException;
 
-@Controller
+@RestController
 @RequestMapping("/user")
 public class UserController {
 
     private UserDAOImpl dao;
-    private Logger logger = LogManager.getLogger();
+    private final Logger logger = LogManager.getLogger();
 
     @Autowired
     public void setDao(UserDAOImpl dao) {
         this.dao = dao;
     }
 
+    /**
+     * Returns a user by username
+     *
+     * @param username PathVariable of the requested user
+     * @return the user that is requested
+     */
     @GetMapping(value = "{username}")
-    public @ResponseBody
-    User getUser(@PathVariable String username) {
+    public User getUser(@PathVariable String username) {
         return dao.findByUsername(username);
     }
 
+    /**
+     * DEPRECATED - this end point is now secured
+     *
+     * @param payload JSON representation of the UserTemplate
+     * @return boolean value representing success or failure
+     */
     @PostMapping
     public @ResponseBody
     boolean registerUser(@RequestBody String payload) {
         ObjectMapper mapper = new ObjectMapper();
         UserTemplate userTemplate;
-
         try {
             userTemplate = mapper.readValue(payload, UserTemplate.class);
         } catch (JsonProcessingException e) {
@@ -58,6 +67,12 @@ public class UserController {
         }
     }
 
+    /**
+     * Updates a user
+     *
+     * @param payload JSON representation of the user to update
+     * @return boolean value representing success or failure
+     */
     @PutMapping
     public @ResponseBody
     boolean updateUser(@RequestBody String payload) {

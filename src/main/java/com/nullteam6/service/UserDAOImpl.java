@@ -23,7 +23,7 @@ import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 public class UserDAOImpl implements UserDAO {
     private static final String ACCOUNT = "accounts";
-    private Logger logger = LogManager.getLogger();
+    private final Logger logger = LogManager.getLogger();
     private LdapTemplate ldapTemplate;
     private ProfileDAO profileDAO;
 
@@ -37,6 +37,12 @@ public class UserDAOImpl implements UserDAO {
         this.profileDAO = profileDAO;
     }
 
+    /**
+     * returns a user based on their uid. Creates and persists a profile if one does not already exists
+     *
+     * @param uid the uid of the user to lookup
+     * @return the User
+     */
     @Override
     public User findByUsername(String uid) {
         User u = ldapTemplate.findOne(
@@ -54,6 +60,13 @@ public class UserDAOImpl implements UserDAO {
         return u;
     }
 
+    /**
+     * DEPRECATED - Use Keycloak to register now
+     *
+     * @param template the UserTemplate to register
+     * @return boolean value denoting success or failure
+     * @throws NoSuchAlgorithmException if the password encryption algorithm is not found
+     */
     @Override
     public boolean registerUser(UserTemplate template) throws NoSuchAlgorithmException {
         Name dn = buildShortUserNameDn(template.getUsername());
@@ -77,6 +90,13 @@ public class UserDAOImpl implements UserDAO {
         return true;
     }
 
+    /**
+     * DEPRECATED - authentication is now handled via Keycloak
+     *
+     * @param template the LoginTemplate to authenticate
+     * @return boolean value denoting success or failure
+     * @throws NoSuchAlgorithmException exception thrown if the password hashing algorithm is not found
+     */
     @Override
     public boolean authenticate(LoginTemplate template) throws NoSuchAlgorithmException {
         LdapContextSource contextSource = new LdapContextSource();
@@ -97,11 +117,23 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    /**
+     * DEPRECATED - updating user details is now handled by Keycloak
+     *
+     * @param user
+     */
     @Override
     public void updateUser(User user) {
-        //TODO: yeet
+        //TODO: Don't implement this
     }
 
+    /**
+     * Hashes a password according to MD5
+     *
+     * @param input the password
+     * @return the hashed password
+     * @throws NoSuchAlgorithmException if MD5 is not found
+     */
     private String digestMD5(String input) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("MD5");
         byte[] hashInBytes = md.digest(input.getBytes(StandardCharsets.UTF_8));
@@ -112,6 +144,11 @@ public class UserDAOImpl implements UserDAO {
         return sb.toString();
     }
 
+    /**
+     * Adds user to cn=ipausers,cn=groups,cn=accounts
+     *
+     * @param fullUserDn
+     */
     private void setIpaUsersMembership(Name fullUserDn) {
         Name dn = LdapNameBuilder.newInstance()
                 .add("cn", ACCOUNT)
@@ -123,6 +160,11 @@ public class UserDAOImpl implements UserDAO {
         ldapTemplate.modifyAttributes(context);
     }
 
+    /**
+     * adds user to cn=miro_users,cn=groups,cn=accounts
+     *
+     * @param fullUserDn
+     */
     private void setMiroUsersMembership(Name fullUserDn) {
         Name dn = LdapNameBuilder.newInstance()
                 .add("cn", ACCOUNT)
@@ -134,6 +176,12 @@ public class UserDAOImpl implements UserDAO {
         ldapTemplate.modifyAttributes(context);
     }
 
+    /**
+     * Constructs the short hand Name of the user
+     *
+     * @param name the username
+     * @return the shorthand Name
+     */
     private Name buildShortUserNameDn(String name) {
         return LdapNameBuilder.newInstance()
                 .add("cn", ACCOUNT)
@@ -142,6 +190,12 @@ public class UserDAOImpl implements UserDAO {
                 .build();
     }
 
+    /**
+     * Constructss the full Name of the user
+     *
+     * @param name the username
+     * @return the full Name
+     */
     private Name buildFullUserNameDn(String name) {
         return LdapNameBuilder.newInstance("dc=miro,dc=5x5code,dc=com")
                 .add("cn", ACCOUNT)

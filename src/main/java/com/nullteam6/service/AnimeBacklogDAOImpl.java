@@ -20,6 +20,12 @@ public class AnimeBacklogDAOImpl implements AnimeBacklogDAO {
         this.sessionFactory = sessionFactory;
     }
 
+    /**
+     * Retrieves an AnimeBacklog by id
+     *
+     * @param id id number of the AnimeBacklog
+     * @return the AnimeBacklog
+     */
     @Override
     public AnimeBacklog getById(int id) {
         AnimeBacklog backlog;
@@ -30,6 +36,11 @@ public class AnimeBacklogDAOImpl implements AnimeBacklogDAO {
         return backlog;
     }
 
+    /**
+     * Persist an AnimeBacklog to the database
+     *
+     * @param backlog The AnimeBacklog
+     */
     @Override
     public void createBacklog(AnimeBacklog backlog) {
         try (Session s = sessionFactory.openSession()) {
@@ -39,6 +50,11 @@ public class AnimeBacklogDAOImpl implements AnimeBacklogDAO {
         }
     }
 
+    /**
+     * Update an AnimeBacklog in the database
+     *
+     * @param backlog The AnimeBacklog to update
+     */
     @Override
     public void updateBacklog(AnimeBacklog backlog) {
         try (Session s = sessionFactory.openSession()) {

@@ -16,6 +16,11 @@ public class AnimeDAOImpl implements AnimeDAO {
     @Autowired
     private SessionFactory sessionFactory;
 
+    /**
+     * Persist an anime in the database
+     *
+     * @param a The anime to persist
+     */
     @Override
     public void add(Anime a) {
         try (Session s = sessionFactory.openSession()) {
@@ -25,6 +30,12 @@ public class AnimeDAOImpl implements AnimeDAO {
         }
     }
 
+    /**
+     * Get an anime by id from the database
+     *
+     * @param id the id of the Anime to lookup
+     * @return The anime requested
+     */
     @Override
     public Anime get(int id) {
         Anime a = null;
