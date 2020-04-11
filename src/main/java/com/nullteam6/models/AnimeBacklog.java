@@ -1,5 +1,8 @@
 package com.nullteam6.models;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
@@ -9,27 +12,34 @@ public class AnimeBacklog {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    private String name;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JoinTable(name = "BACKLOG_ANIME")
     private List<Anime> backlist;
 
-    @OneToMany(fetch = FetchType.EAGER)
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JoinTable(name = "PROGRESS_ANIME")
     private List<Anime> inProgList;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JoinTable(name = "FINISHED_ANIME")
     private List<Anime> finishedList;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JoinTable(name = "DROPPED_ANIME")
     private List<Anime> droppedList;
 
     public AnimeBacklog() {
         super();
     }
 
-    public AnimeBacklog(int id, String name, List<Anime> backlist, List<Anime> inProgList, List<Anime> finishedList, List<Anime> droppedList) {
+    public AnimeBacklog(int id, List<Anime> backlist, List<Anime> inProgList, List<Anime> finishedList, List<Anime> droppedList) {
         this.id = id;
-        this.name = name;
         this.backlist = backlist;
         this.inProgList = inProgList;
         this.finishedList = finishedList;
@@ -42,14 +52,6 @@ public class AnimeBacklog {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public List<Anime> getBacklist() {
@@ -90,7 +92,6 @@ public class AnimeBacklog {
         if (o == null || getClass() != o.getClass()) return false;
         AnimeBacklog that = (AnimeBacklog) o;
         return id == that.id &&
-                name.equals(that.name) &&
                 backlist.equals(that.backlist) &&
                 inProgList.equals(that.inProgList) &&
                 finishedList.equals(that.finishedList) &&
@@ -99,14 +100,13 @@ public class AnimeBacklog {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, backlist, inProgList, finishedList, droppedList);
+        return Objects.hash(id, backlist, inProgList, finishedList, droppedList);
     }
 
     @Override
     public String toString() {
         return "AnimeBacklog{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
                 ", backlist=" + backlist +
                 ", inProgList=" + inProgList +
                 ", finishedList=" + finishedList +

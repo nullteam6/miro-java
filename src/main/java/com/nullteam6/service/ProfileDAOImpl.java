@@ -1,16 +1,20 @@
 package com.nullteam6.service;
 
 import com.nullteam6.models.Profile;
+import com.nullteam6.utility.PaginatedList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.TypedQuery;
+import java.util.List;
 
 @Repository
+@Transactional
 public class ProfileDAOImpl implements ProfileDAO {
 
     private SessionFactory sessionFactory;
@@ -47,16 +51,9 @@ public class ProfileDAOImpl implements ProfileDAO {
      */
     @Override
     public boolean updateProfile(Profile profile) {
-        try (Session s = sessionFactory.openSession()) {
-            Transaction tx = s.beginTransaction();
-            s.saveOrUpdate(profile);
-            s.flush();
-            tx.commit();
-            return true;
-        } catch (HibernateException ex) {
-            logger.info(ex.getMessage());
-        }
-        return false;
+        Session s = sessionFactory.getCurrentSession();
+        s.saveOrUpdate(profile);
+        return true;
     }
 
     /**
@@ -67,15 +64,44 @@ public class ProfileDAOImpl implements ProfileDAO {
      */
     @Override
     public boolean createProfile(Profile profile) {
-        try (Session s = sessionFactory.openSession()) {
-            Transaction tx = s.beginTransaction();
-            s.save(profile);
-            s.flush();
-            tx.commit();
-            return true;
-        } catch (HibernateException ex) {
-            logger.info(ex.getMessage());
-        }
-        return false;
+        Session s = sessionFactory.getCurrentSession();
+        s.save(profile);
+        return true;
+    }
+
+    @Override
+    public PaginatedList<Profile> getAll() {
+        String hql = "FROM Profile";
+        Session s = sessionFactory.getCurrentSession();
+        TypedQuery<Profile> query = s.createQuery(hql, Profile.class)
+                .setFirstResult(0)
+                .setMaxResults(10);
+        List<Profile> p = query.getResultList();
+        PaginatedList<Profile> profileList = new PaginatedList<>();
+        profileList.setData(p);
+        profileList.setNext(String.valueOf(10));
+        profileList.setTotalCount(getProfilesCount());
+        return profileList;
+    }
+
+    @Override
+    public PaginatedList<Profile> getAllOffset(int offset) {
+        String hql = "FROM Profile";
+        Session s = sessionFactory.getCurrentSession();
+        TypedQuery<Profile> query = s.createQuery(hql, Profile.class)
+                .setFirstResult(offset)
+                .setMaxResults(10);
+        List<Profile> p = query.getResultList();
+        PaginatedList<Profile> profileList = new PaginatedList<>();
+        profileList.setData(p);
+        profileList.setTotalCount(getProfilesCount());
+        profileList.setNext(String.valueOf(offset + 11));
+        return profileList;
+    }
+
+    private long getProfilesCount() {
+        String hql = "SELECT COUNT(*) FROM Profile";
+        Session s = sessionFactory.getCurrentSession();
+        return (Long) s.createQuery(hql).list().get(0);
     }
 }

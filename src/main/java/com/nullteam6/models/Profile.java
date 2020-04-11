@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 public class Profile {
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     AnimeBacklog aniBacklog;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
