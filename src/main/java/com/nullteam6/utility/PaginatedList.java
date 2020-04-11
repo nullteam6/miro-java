@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PaginatedList<T> {
-    private int totalCount;
+    private long totalCount;
     private String next;
     private String last;
     private List<T> data;
@@ -13,11 +13,11 @@ public class PaginatedList<T> {
         data = new ArrayList<>();
     }
 
-    public int getTotalCount() {
+    public long getTotalCount() {
         return totalCount;
     }
 
-    public void setTotalCount(int totalCount) {
+    public void setTotalCount(long totalCount) {
         this.totalCount = totalCount;
     }
 
