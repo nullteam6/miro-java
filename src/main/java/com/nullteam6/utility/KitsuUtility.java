@@ -14,7 +14,7 @@ import java.util.concurrent.BlockingQueue;
 public class KitsuUtility {
     private static KitsuUtility instance = null;
     Thread dt;
-    private BlockingQueue<KitsuCommand> queue;
+    private final BlockingQueue<KitsuCommand> queue;
 
     private KitsuUtility() {
         super();
@@ -22,6 +22,11 @@ public class KitsuUtility {
         initThread();
     }
 
+    /**
+     * Gets the instance of KitsuUtility for executing commands
+     *
+     * @return the instance of KitsuUtility
+     */
     public static KitsuUtility getInstance() {
         if (instance == null) {
             instance = new KitsuUtility();
@@ -29,6 +34,11 @@ public class KitsuUtility {
         return instance;
     }
 
+    /**
+     * Add a command to queue
+     *
+     * @param command a KitsuCommand containing the URL to retrieve
+     */
     public void addToQueue(KitsuCommand command) {
         queue.add(command);
         if (!dt.isAlive()) {
@@ -36,12 +46,21 @@ public class KitsuUtility {
         }
     }
 
+    /**
+     * initiates a new scheduler if the old one has ended due to inactivity
+     */
     private void initThread() {
         dt = new Thread(new KitsuDaemon(queue), "dt");
         dt.setDaemon(true);
         dt.start();
     }
 
+    /**
+     * check to see if the KitsuCommand queue contains an object
+     *
+     * @param cmd the KitsuCommand to check
+     * @return true if the command is still in queue or false otherwise
+     */
     public boolean contains(KitsuCommand cmd) {
         return queue.contains(cmd);
     }
@@ -51,7 +70,7 @@ public class KitsuUtility {
 
 class KitsuDaemon implements Runnable {
     private static final int RATE_LIMIT = 300;
-    private BlockingQueue<KitsuCommand> queue;
+    private final BlockingQueue<KitsuCommand> queue;
     protected Logger logger = LogManager.getLogger();
 
     public KitsuDaemon(BlockingQueue<KitsuCommand> queue) {
@@ -78,6 +97,12 @@ class KitsuDaemon implements Runnable {
         }
     }
 
+    /**
+     * Retrieves JSON from Kitsu
+     *
+     * @param command the KitsuCommand containing the URL to retrieve
+     * @throws IOException IOException resulting from either a MalformedURLException or a JsonProcessingException
+     */
     private void executeCommand(KitsuCommand command) throws IOException {
         HttpURLConnection con = (HttpURLConnection) command.getUrl().openConnection();
         con.setRequestMethod("GET");

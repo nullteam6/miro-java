@@ -17,13 +17,19 @@ import java.security.NoSuchAlgorithmException;
 public class LoginController {
 
     private UserDAO userDAO;
-    private Logger logger = LogManager.getLogger();
+    private final Logger logger = LogManager.getLogger();
 
     @Autowired
     public void setUserDAO(UserDAO userDAO) {
         this.userDAO = userDAO;
     }
 
+    /**
+     * DEPRECATED - Login is now handled by Keycloak
+     *
+     * @param loginTemplate the json representation of the LoginTemplate
+     * @return the user who logged in or a HttpStatus.BAD_REQUEST
+     */
     @PostMapping
     public @ResponseBody
     User login(@RequestBody LoginTemplate loginTemplate) {

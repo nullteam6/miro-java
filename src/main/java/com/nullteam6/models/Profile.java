@@ -1,12 +1,11 @@
 package com.nullteam6.models;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class Profile {
-    @OneToMany(fetch = FetchType.EAGER)
-    List<AnimeBacklog> aniBacklogList;
+    @OneToOne(fetch = FetchType.EAGER)
+    AnimeBacklog aniBacklog;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
@@ -42,11 +41,11 @@ public class Profile {
         this.description = description;
     }
 
-    public List<AnimeBacklog> getAniBacklogList() {
-        return aniBacklogList;
+    public AnimeBacklog getAniBacklog() {
+        return aniBacklog;
     }
 
-    public void setAniBacklogList(List<AnimeBacklog> aniBacklogList) {
-        this.aniBacklogList = aniBacklogList;
+    public void setAniBacklog(AnimeBacklog aniBacklogList) {
+        this.aniBacklog = aniBacklogList;
     }
 }

@@ -14,13 +14,19 @@ import org.springframework.stereotype.Repository;
 public class ProfileDAOImpl implements ProfileDAO {
 
     private SessionFactory sessionFactory;
-    private Logger logger = LogManager.getLogger();
+    private final Logger logger = LogManager.getLogger();
 
     @Autowired
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
+    /**
+     * Get a profile from a user by the user's uid
+     *
+     * @param uid uid of the user
+     * @return the user's profile
+     */
     @Override
     public Profile getProfileByUID(String uid) {
         String hql = "FROM Profile P WHERE P.uid = :uid";
@@ -33,6 +39,12 @@ public class ProfileDAOImpl implements ProfileDAO {
         return p;
     }
 
+    /**
+     * Updates a user profile
+     *
+     * @param profile Profile to be updated
+     * @return boolean value denoting success or failure
+     */
     @Override
     public boolean updateProfile(Profile profile) {
         try (Session s = sessionFactory.openSession()) {
@@ -47,6 +59,12 @@ public class ProfileDAOImpl implements ProfileDAO {
         return false;
     }
 
+    /**
+     * create a profile
+     *
+     * @param profile the profile to persist to the database
+     * @return boolean value denoting success or failure
+     */
     @Override
     public boolean createProfile(Profile profile) {
         try (Session s = sessionFactory.openSession()) {

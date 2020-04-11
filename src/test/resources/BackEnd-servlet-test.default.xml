@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:ldap="http://www.springframework.org/schema/ldap"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/mvc
+           http://www.springframework.org/schema/mvc/spring-mvc.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/tx
+           http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+           http://www.springframework.org/schema/ldap
+           http://www.springframework.org/schema/ldap/spring-ldap.xsd
+           http://www.springframework.org/schema/task
+           http://www.springframework.org/schema/task/spring-task-4.3.xsd">
+
+    <task:executor id="taskExecutor" pool-size="1" queue-capacity="1024"/>
+    <mvc:annotation-driven/>
+    <context:component-scan base-package="com.nullteam6"/>
+    <mvc:default-servlet-handler/>
+    <mvc:cors>
+        <mvc:mapping path="/**"/>
+    </mvc:cors>
+
+    <ldap:context-source
+            url="[CHANGE-ME]"
+            base="dc=miro,dc=5x5code,dc=com"
+            username="uid=miro-admin,cn=users,cn=accounts,dc=miro,dc=5x5code,dc=com"
+            password="[CHANGE-ME]"/>
+    <ldap:ldap-template id="ldapTemplate"/>
+
+    <bean id="userRepo" class="com.nullteam6.service.UserDAOImpl">
+        <property name="ldapTemplate" ref="ldapTemplate"/>
+    </bean>
+
+    <bean id="dataSource" class="org.apache.tomcat.dbcp.dbcp2.BasicDataSource">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@localhost:1521/orclpdb1.localdomain"/>
+        <property name="username" value="[CHANGE-ME]"/>
+        <property name="password" value="[CHANGE-ME]"/>
+    </bean>
+
+
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="packagesToScan" value="com.nullteam6.models"/>
+        <property name="dataSource" ref="dataSource"/>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="txManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <tx:annotation-driven transaction-manager="txManager"/>
+</beans>

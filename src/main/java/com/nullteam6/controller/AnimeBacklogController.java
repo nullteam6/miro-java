@@ -10,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-
 @RestController
 @RequestMapping("/animebacklog")
 public class AnimeBacklogController {
@@ -24,11 +22,23 @@ public class AnimeBacklogController {
         this.dao = dao;
     }
 
+    /**
+     * Returns JSON representation of an AnimeBacklog
+     *
+     * @param id the id of the AnimeBacklog to retrieve
+     * @return JSON representation of that AnimeBacklog
+     */
     @GetMapping(value = "{id}")
     public ResponseEntity<AnimeBacklog> getBackLog(@PathVariable int id) {
         return ResponseEntity.status(HttpStatus.OK).body(dao.getById(id));
     }
 
+    /**
+     * Reads in a backlog from JSON and updates it in the database.
+     *
+     * @param payload the JSON representation of the backlog to update
+     * @return boolean value indicating success or failure
+     */
     @PutMapping
     public ResponseEntity<Boolean> updateBackLog(@RequestBody String payload) {
         ObjectMapper mapper = new ObjectMapper();
@@ -45,6 +55,13 @@ public class AnimeBacklogController {
         return ResponseEntity.status(status).body(success);
     }
 
+    /**
+     * Adds a specific anime to a backlog.
+     *
+     * @param id      - the id of the BackLog to add the anime to
+     * @param payload - the JSON object of the anime
+     * @return boolean value indicating a success or failure
+     */
     @PutMapping(value = "{id}")
     public boolean addToBacklog(@PathVariable int id, @RequestBody String payload) {
         AnimeBacklog backlog = dao.getById(id);
@@ -59,8 +76,15 @@ public class AnimeBacklogController {
         return true;
     }
 
+    /**
+     * Creates a new AnimeBacklog
+     *
+     * @param payload JSON representation of an AnimeBacklog to create
+     * @return boolean value representing success or failure
+     * @throws JsonProcessingException if payload is malformed
+     */
     @PostMapping
-    public boolean createBacklog(@RequestBody String payload) throws IOException {
+    public boolean createBacklog(@RequestBody String payload) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         AnimeBacklog backlog = mapper.readValue(payload, AnimeBacklog.class);
         dao.createBacklog(backlog);

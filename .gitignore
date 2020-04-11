@@ -6,7 +6,7 @@ src/main/webapp/WEB-INF/BackEnd-servlet.xml
 .vscode
 .DS_Store
 **/.DS_Store
-
+src/test/resources/BackEnd-servlet-test.xml
 ### Eclipse ###
 .metadata
 bin/

@@ -20,13 +20,18 @@ import java.util.List;
 public class CategoryController {
 
     private CategoryService service;
-    private Logger logger = LogManager.getLogger();
+    private final Logger logger = LogManager.getLogger();
 
     @Autowired
     public void setService(CategoryService service) {
         this.service = service;
     }
 
+    /**
+     * Returns all categories.
+     *
+     * @return a list of all categories
+     */
     @GetMapping
     public List<Category> listAll() {
         List<Category> catList;
@@ -39,6 +44,12 @@ public class CategoryController {
         return catList;
     }
 
+    /**
+     * Returns all the categories associated with an anime
+     *
+     * @param id the id of the anime
+     * @return the list of categories that anime has been tagged with
+     */
     @GetMapping(value = "/anime/{id}")
     public List<Category> listByAnime(@PathVariable int id) {
         List<Category> catList;
