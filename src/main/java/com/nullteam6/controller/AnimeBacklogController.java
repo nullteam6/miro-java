@@ -55,26 +55,26 @@ public class AnimeBacklogController {
         return ResponseEntity.status(status).body(success);
     }
 
-    /**
-     * Adds a specific anime to a backlog.
-     *
-     * @param id      - the id of the BackLog to add the anime to
-     * @param payload - the JSON object of the anime
-     * @return boolean value indicating a success or failure
-     */
-    @PutMapping(value = "{id}")
-    public boolean addToBacklog(@PathVariable int id, @RequestBody String payload) {
-        AnimeBacklog backlog = dao.getById(id);
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            Anime anime = mapper.readValue(payload, Anime.class);
-            backlog.addToList(anime);
-            dao.updateBacklog(backlog);
-        } catch (JsonProcessingException ex) {
-            return false;
-        }
-        return true;
-    }
+//    /**
+//     * Adds a specific anime to a backlog.
+//     *
+//     * @param id      - the id of the BackLog to add the anime to
+//     * @param payload - the JSON object of the anime
+//     * @return boolean value indicating a success or failure
+//     */
+//    @PutMapping(value = "{id}")
+//    public boolean addToBacklog(@PathVariable int id, @RequestBody String payload) {
+//        AnimeBacklog backlog = dao.getById(id);
+//        ObjectMapper mapper = new ObjectMapper();
+//        try {
+//            Anime anime = mapper.readValue(payload, Anime.class);
+//            backlog.addToList(anime);
+//            dao.updateBacklog(backlog);
+//        } catch (JsonProcessingException ex) {
+//            return false;
+//        }
+//        return true;
+//    }
 
     /**
      * Creates a new AnimeBacklog
