@@ -15,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/anime")
+@CrossOrigin
 public class AnimeController {
 
     private AnimeService service;

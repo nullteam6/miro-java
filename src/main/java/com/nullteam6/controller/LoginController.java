@@ -13,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.security.NoSuchAlgorithmException;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/login")
 public class LoginController {
 
