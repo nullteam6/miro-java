@@ -1,9 +1,6 @@
 package com.nullteam6.service;
 
-import com.nullteam6.models.LoginTemplate;
-import com.nullteam6.models.Profile;
-import com.nullteam6.models.User;
-import com.nullteam6.models.UserTemplate;
+import com.nullteam6.models.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +15,8 @@ import javax.persistence.NoResultException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
@@ -54,6 +53,16 @@ public class UserDAOImpl implements UserDAO {
         } catch (NoResultException ex) {
             p = new Profile();
             p.setUid(uid);
+            AnimeBacklog log = new AnimeBacklog();
+            List<Anime> backList = new ArrayList<>();
+            List<Anime> watchingList = new ArrayList<>();
+            List<Anime> finishedList = new ArrayList<>();
+            List<Anime> droppedList = new ArrayList<>();
+            log.setBacklist(backList);
+            log.setInProgList(watchingList);
+            log.setFinishedList(finishedList);
+            log.setDroppedList(droppedList);
+            p.setAniBacklog(log);
             profileDAO.createProfile(p);
         }
         u.setProfile(p);
