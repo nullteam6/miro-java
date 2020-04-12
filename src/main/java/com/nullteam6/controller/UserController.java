@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.security.NoSuchAlgorithmException;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/user")
 public class UserController {
 
