@@ -10,6 +10,10 @@ public interface ProfileDAO {
 
     boolean createProfile(Profile profile);
 
+    PaginatedList<Profile> search(String uid);
+
+    PaginatedList<Profile> searchOffset(String uid, int offset);
+
     PaginatedList<Profile> getAll();
 
     PaginatedList<Profile> getAllOffset(int offset);
