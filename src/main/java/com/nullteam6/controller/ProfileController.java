@@ -4,13 +4,11 @@ import com.nullteam6.models.Profile;
 import com.nullteam6.service.ProfileDAO;
 import com.nullteam6.utility.PaginatedList;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/profile")
-@Transactional
 public class ProfileController {
 
     private ProfileDAO dao;
