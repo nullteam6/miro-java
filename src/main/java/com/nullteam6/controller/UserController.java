@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nullteam6.models.User;
 import com.nullteam6.models.UserTemplate;
 import com.nullteam6.service.UserDAOImpl;
+import com.nullteam6.utility.PaginatedList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,12 @@ public class UserController {
     @Autowired
     public void setDao(UserDAOImpl dao) {
         this.dao = dao;
+    }
+
+
+    @GetMapping
+    public PaginatedList<User> getAllUsers() {
+        return dao.getAll();
     }
 
     /**
