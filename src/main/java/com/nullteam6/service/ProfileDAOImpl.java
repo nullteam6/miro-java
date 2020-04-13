@@ -33,14 +33,11 @@ public class ProfileDAOImpl implements ProfileDAO {
      */
     @Override
     public Profile getProfileByUID(String uid) {
+        Session s = sessionFactory.getCurrentSession();
         String hql = "FROM Profile P WHERE P.uid = :uid";
-        Profile p;
-        try (Session s = sessionFactory.openSession()) {
-            p = (Profile) s.createQuery(hql)
-                    .setParameter("uid", uid)
-                    .getSingleResult();
-        }
-        return p;
+        return (Profile) s.createQuery(hql)
+                .setParameter("uid", uid)
+                .getSingleResult();
     }
 
     /**
@@ -70,18 +67,35 @@ public class ProfileDAOImpl implements ProfileDAO {
     }
 
     @Override
+    public PaginatedList<Profile> search(String uid) {
+        Session s = sessionFactory.getCurrentSession();
+        String hql = "FROM Profile P WHERE P.uid LIKE CONCAT('%',:uid,'%')";
+        TypedQuery<Profile> query = s.createQuery(hql, Profile.class)
+                .setParameter("uid", uid)
+                .setFirstResult(0)
+                .setMaxResults(10);
+        return buildProfilePage(query.getResultList(), 0, getProfileSearchCount(uid));
+    }
+
+    @Override
+    public PaginatedList<Profile> searchOffset(String uid, int offset) {
+        Session s = sessionFactory.getCurrentSession();
+        String hql = "FROM Profile P WHERE P.uid LIKE CONCAT('%',:uid,'%')";
+        TypedQuery<Profile> query = s.createQuery(hql, Profile.class)
+                .setParameter("uid", uid)
+                .setFirstResult(offset)
+                .setMaxResults(10);
+        return buildProfilePage(query.getResultList(), offset, getProfileSearchCount(uid));
+    }
+
+    @Override
     public PaginatedList<Profile> getAll() {
         String hql = "FROM Profile";
         Session s = sessionFactory.getCurrentSession();
         TypedQuery<Profile> query = s.createQuery(hql, Profile.class)
                 .setFirstResult(0)
                 .setMaxResults(10);
-        List<Profile> p = query.getResultList();
-        PaginatedList<Profile> profileList = new PaginatedList<>();
-        profileList.setData(p);
-        profileList.setNext(String.valueOf(10));
-        profileList.setTotalCount(getProfilesCount());
-        return profileList;
+        return buildProfilePage(query.getResultList(), 0, getProfilesCount());
     }
 
     @Override
@@ -91,17 +105,26 @@ public class ProfileDAOImpl implements ProfileDAO {
         TypedQuery<Profile> query = s.createQuery(hql, Profile.class)
                 .setFirstResult(offset)
                 .setMaxResults(10);
-        List<Profile> p = query.getResultList();
-        PaginatedList<Profile> profileList = new PaginatedList<>();
-        profileList.setData(p);
-        profileList.setTotalCount(getProfilesCount());
-        profileList.setNext(String.valueOf(offset + 11));
-        return profileList;
+        return buildProfilePage(query.getResultList(), offset, getProfilesCount());
     }
 
     private long getProfilesCount() {
         String hql = "SELECT COUNT(*) FROM Profile";
         Session s = sessionFactory.getCurrentSession();
         return (Long) s.createQuery(hql).list().get(0);
+    }
+
+    private long getProfileSearchCount(String uid) {
+        String hql = "SELECT COUNT(*) FROM Profile P WHERE P.uid LIKE CONCAT('%',:uid,'%')";
+        Session s = sessionFactory.getCurrentSession();
+        return (Long) s.createQuery(hql).setParameter("uid", uid).list().get(0);
+    }
+
+    private PaginatedList<Profile> buildProfilePage(List<Profile> profileList, int offset, long totalSize) {
+        PaginatedList<Profile> profilePage = new PaginatedList<>();
+        profilePage.setData(profileList);
+        profilePage.setTotalCount(totalSize);
+        profilePage.setNext(String.valueOf(offset + 10));
+        return profilePage;
     }
 }

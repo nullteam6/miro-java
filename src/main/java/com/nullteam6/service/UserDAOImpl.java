@@ -72,14 +72,11 @@ public class UserDAOImpl implements UserDAO {
 
     public PaginatedList<User> getAll() {
         int start = 0;
-        List<User> uList = ldapTemplate.findAll(User.class);
-        PaginatedList<User> userList = new PaginatedList<>();
-        userList.setTotalCount(uList.size());
-        if (uList.size() > 10)
-            userList.setData(uList.subList(start, start + 10));
-        else
-            userList.setData(uList);
-        return userList;
+        return buildUserPage(ldapTemplate.findAll(User.class), start);
+    }
+
+    public PaginatedList<User> getAllOffset(int offset) {
+        return buildUserPage(ldapTemplate.findAll(User.class), offset);
     }
 
     /**
@@ -224,5 +221,17 @@ public class UserDAOImpl implements UserDAO {
                 .add("cn", "users")
                 .add("uid", name)
                 .build();
+    }
+
+    private PaginatedList<User> buildUserPage(List<User> userList, int offset) {
+        PaginatedList<User> userPage = new PaginatedList<>();
+        userPage.setTotalCount(userList.size());
+        if ((offset + 10) < userList.size())
+            userPage.setData(userList.subList(offset, offset + 10));
+        else if (userList.size() - offset < 10)
+            userPage.setData(userList.subList(offset, userList.size() - 1));
+        else
+            userPage.setData(userList.subList(offset, offset + 10));
+        return userPage;
     }
 }

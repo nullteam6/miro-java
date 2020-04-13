@@ -1,6 +1,7 @@
 package com.nullteam6.models;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Profile {
@@ -12,6 +13,10 @@ public class Profile {
     @Column(name = "user_uid", unique = true)
     private String uid;
     private String description;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "PROFILE_FRIENDS")
+    List<Profile> followingList;
 
     public Profile() {
         super();

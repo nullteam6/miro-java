@@ -20,12 +20,21 @@ public class ProfileController {
 
     @GetMapping
     public PaginatedList<Profile> getAllProfile(
-            @RequestParam(name = "offset", required = false) Integer offset
+            @RequestParam(name = "offset", required = false) Integer offset,
+            @RequestParam(name = "search", required = false) String search
     ) {
-        if (offset != null)
-            return dao.getAllOffset(offset);
-        else
+        if (offset != null) {
+            if (search != null) {
+                return dao.searchOffset(search, offset);
+            } else {
+                return dao.getAllOffset(offset);
+            }
+        } else {
+            if (search != null) {
+                return dao.search(search);
+            }
             return dao.getAll();
+        }
     }
 
     @GetMapping("/{id}")
