@@ -54,6 +54,8 @@ public class UserDAOImpl implements UserDAO {
         } catch (NoResultException ex) {
             p = new Profile();
             p.setUid(uid);
+            List<Profile> followingList = new ArrayList<>();
+            p.setFollowingList(followingList);
             AnimeBacklog log = new AnimeBacklog();
             List<Anime> backList = new ArrayList<>();
             List<Anime> watchingList = new ArrayList<>();
