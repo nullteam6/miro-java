@@ -1,6 +1,7 @@
 package com.nullteam6.service;
 
 import com.nullteam6.models.*;
+import com.nullteam6.utility.PaginatedList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +68,18 @@ public class UserDAOImpl implements UserDAO {
         }
         u.setProfile(p);
         return u;
+    }
+
+    public PaginatedList<User> getAll() {
+        int start = 0;
+        List<User> uList = ldapTemplate.findAll(User.class);
+        PaginatedList<User> userList = new PaginatedList<>();
+        userList.setTotalCount(uList.size());
+        if (uList.size() > 10)
+            userList.setData(uList.subList(start, start + 10));
+        else
+            userList.setData(uList);
+        return userList;
     }
 
     /**
