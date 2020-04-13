@@ -18,6 +18,14 @@ public class Profile {
     @JoinTable(name = "PROFILE_FRIENDS")
     List<Profile> followingList;
 
+    public List<Profile> getFollowingList() {
+        return followingList;
+    }
+
+    public void setFollowingList(List<Profile> followingList) {
+        this.followingList = followingList;
+    }
+
     public Profile() {
         super();
     }
