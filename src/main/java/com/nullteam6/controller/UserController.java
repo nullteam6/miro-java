@@ -3,6 +3,7 @@ package com.nullteam6.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nullteam6.models.User;
+import com.nullteam6.models.UserDTO;
 import com.nullteam6.models.UserTemplate;
 import com.nullteam6.service.UserDAOImpl;
 import com.nullteam6.utility.PaginatedList;
@@ -41,7 +42,7 @@ public class UserController {
      * @return the user that is requested
      */
     @GetMapping(value = "{username}")
-    public User getUser(@PathVariable String username) {
+    public UserDTO getUser(@PathVariable String username) {
         return dao.findByUsername(username);
     }
 

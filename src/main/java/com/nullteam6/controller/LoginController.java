@@ -1,7 +1,7 @@
 package com.nullteam6.controller;
 
 import com.nullteam6.models.LoginTemplate;
-import com.nullteam6.models.User;
+import com.nullteam6.models.UserDTO;
 import com.nullteam6.service.UserDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,7 +33,7 @@ public class LoginController {
      */
     @PostMapping
     public @ResponseBody
-    User login(@RequestBody LoginTemplate loginTemplate) {
+    UserDTO login(@RequestBody LoginTemplate loginTemplate) {
         try {
             if (userDAO.authenticate(loginTemplate)) {
                 return userDAO.findByUsername(loginTemplate.getUsername());

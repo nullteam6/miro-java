@@ -1,10 +1,11 @@
 package com.nullteam6.service;
 
 import com.nullteam6.models.Profile;
+import com.nullteam6.models.ProfileDTO;
 import com.nullteam6.utility.PaginatedList;
 
 public interface ProfileDAO {
-    Profile getProfileByUID(String uid);
+    ProfileDTO getProfileByUID(String uid);
 
     boolean updateProfile(Profile profile);
 

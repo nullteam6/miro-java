@@ -1,6 +1,7 @@
 package com.nullteam6.controller;
 
 import com.nullteam6.models.Profile;
+import com.nullteam6.models.ProfileDTO;
 import com.nullteam6.service.ProfileDAO;
 import com.nullteam6.utility.PaginatedList;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,12 +39,13 @@ public class ProfileController {
     }
 
     @GetMapping("/{id}")
-    public Profile getByUID(@PathVariable String id) {
+    public ProfileDTO getByUID(@PathVariable String id) {
         return dao.getProfileByUID(id);
     }
 
     @PutMapping
-    public boolean updateProfile(@RequestBody Profile profile) {
-        return dao.updateProfile(profile);
+    public boolean updateProfile(@RequestBody ProfileDTO profile) {
+        Profile p = new Profile(profile);
+        return dao.updateProfile(p);
     }
 }

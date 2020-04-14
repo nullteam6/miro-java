@@ -1,6 +1,7 @@
 package com.nullteam6.service;
 
 import com.nullteam6.models.Profile;
+import com.nullteam6.models.ProfileDTO;
 import com.nullteam6.utility.PaginatedList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,12 +34,15 @@ public class ProfileDAOImpl implements ProfileDAO {
      * @return the user's profile
      */
     @Override
-    public Profile getProfileByUID(String uid) {
+    public ProfileDTO getProfileByUID(String uid) {
         Session s = sessionFactory.getCurrentSession();
         String hql = "FROM Profile P WHERE P.uid = :uid";
-        return (Profile) s.createQuery(hql)
+        Profile p = (Profile) s.createQuery(hql)
                 .setParameter("uid", uid)
                 .getSingleResult();
+        ProfileDTO pDTO = new ProfileDTO(p);
+        s.evict(p);
+        return pDTO;
     }
 
     /**
@@ -57,7 +61,7 @@ public class ProfileDAOImpl implements ProfileDAO {
             s.evict(p);
             s.merge(profile);
         }
-
+        s.flush();
         return true;
     }
 
@@ -71,6 +75,8 @@ public class ProfileDAOImpl implements ProfileDAO {
     public boolean createProfile(Profile profile) {
         Session s = sessionFactory.getCurrentSession();
         s.save(profile);
+        s.flush();
+        s.evict(profile);
         return true;
     }
 
