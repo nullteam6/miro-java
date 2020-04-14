@@ -9,11 +9,14 @@ public class ProfileDTO {
     private String uid;
     private String description;
 
+    public ProfileDTO() {
+        super();
+    }
+
     public ProfileDTO(Profile p) {
         this.id = p.getId();
         this.aniBacklog = p.getAniBacklog();
         this.uid = p.getUid();
-        this.description = p.getUid();
         this.description = p.getDescription();
         this.followingList = p.getFollowingList();
     }
