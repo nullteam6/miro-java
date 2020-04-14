@@ -2,13 +2,14 @@ package com.nullteam6.service;
 
 import com.nullteam6.models.LoginTemplate;
 import com.nullteam6.models.User;
+import com.nullteam6.models.UserDTO;
 import com.nullteam6.models.UserTemplate;
 import com.nullteam6.utility.PaginatedList;
 
 import java.security.NoSuchAlgorithmException;
 
 public interface UserDAO {
-    User findByUsername(String username);
+    UserDTO findByUsername(String username);
 
     boolean registerUser(UserTemplate template) throws NoSuchAlgorithmException;
 

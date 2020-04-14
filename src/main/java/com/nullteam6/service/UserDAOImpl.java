@@ -44,15 +44,15 @@ public class UserDAOImpl implements UserDAO {
      * @return the User
      */
     @Override
-    public User findByUsername(String uid) {
+    public UserDTO findByUsername(String uid) {
         User u = ldapTemplate.findOne(
                 query().where("objectclass").is("person").and("uid").is(uid),
                 User.class);
-        Profile p;
+        ProfileDTO pDTO;
         try {
-            p = profileDAO.getProfileByUID(uid);
+            pDTO = profileDAO.getProfileByUID(uid);
         } catch (NoResultException ex) {
-            p = new Profile();
+            Profile p = new Profile();
             p.setUid(uid);
             List<Profile> followingList = new ArrayList<>();
             p.setFollowingList(followingList);
@@ -67,9 +67,10 @@ public class UserDAOImpl implements UserDAO {
             log.setDroppedList(droppedList);
             p.setAniBacklog(log);
             profileDAO.createProfile(p);
+            pDTO = new ProfileDTO(p);
         }
-        u.setProfile(p);
-        return u;
+        u.setProfile(new Profile(pDTO));
+        return new UserDTO(u);
     }
 
     public PaginatedList<User> getAll() {
