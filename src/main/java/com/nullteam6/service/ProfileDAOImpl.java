@@ -53,6 +53,8 @@ public class ProfileDAOImpl implements ProfileDAO {
         try {
             s.saveOrUpdate(profile);
         } catch (NonUniqueObjectException ex) {
+            Profile p = s.get(Profile.class, profile.getId());
+            s.evict(p);
             s.merge(profile);
         }
 
