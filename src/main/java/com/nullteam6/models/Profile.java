@@ -13,6 +13,7 @@ public class Profile {
     @Column(name = "user_uid", unique = true)
     private String uid;
     private String description;
+    private String avatar;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "PROFILE_FRIENDS")
