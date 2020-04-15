@@ -10,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.security.NoSuchAlgorithmException;
-
 @RestController
 @CrossOrigin
 @RequestMapping("/login")
@@ -34,13 +32,8 @@ public class LoginController {
     @PostMapping
     public @ResponseBody
     UserDTO login(@RequestBody LoginTemplate loginTemplate) {
-        try {
-            if (userDAO.authenticate(loginTemplate)) {
-                return userDAO.findByUsername(loginTemplate.getUsername());
-            }
-        } catch (NoSuchAlgorithmException ex) {
-            logger.debug(ex.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+        if (userDAO.authenticate(loginTemplate)) {
+            return userDAO.findByUsername(loginTemplate.getUsername());
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Authentication Failed");
     }

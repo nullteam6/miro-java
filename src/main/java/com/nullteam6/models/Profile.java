@@ -1,24 +1,31 @@
 package com.nullteam6.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@JsonIdentityInfo(property = "id", generator = ObjectIdGenerators.None.class)
 public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private AnimeBacklog aniBacklog;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.PERSIST, CascadeType.REMOVE})
+    @JoinTable(name = "PROFILE_FRIENDS",
+            joinColumns = {@JoinColumn(name = "PROFILE_ID")},
+            inverseJoinColumns = {@JoinColumn(name = "FOLLOWINGLIST_ID")})
+    @JsonIgnoreProperties("followingList")
+    List<Profile> followingList;
 
     @Column(name = "user_uid", unique = true)
     private String uid;
     private String description;
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "PROFILE_FRIENDS")
-    List<Profile> followingList;
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.PERSIST, CascadeType.REMOVE})
+    private AnimeBacklog aniBacklog;
 
     public Profile() {
         super();
