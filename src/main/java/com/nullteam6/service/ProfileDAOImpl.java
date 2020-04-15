@@ -74,7 +74,7 @@ public class ProfileDAOImpl implements ProfileDAO {
     @Override
     public boolean createProfile(Profile profile) {
         Session s = sessionFactory.getCurrentSession();
-        s.save(profile);
+        s.persist(profile);
         s.flush();
         s.evict(profile);
         return true;

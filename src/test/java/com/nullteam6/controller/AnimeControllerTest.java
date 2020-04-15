@@ -63,6 +63,33 @@ public class AnimeControllerTest {
     }
 
     @Test
+    public void getAnimeByCategory() throws Exception {
+        this.mockMvc.perform(get("/anime?category=12").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    public void getAnimeByCategoryOffset() throws Exception {
+        this.mockMvc.perform(get("/anime?category=12&offset=0").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    public void getAllAnimeOffset() throws Exception {
+        this.mockMvc.perform(get("/anime?offset=15").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    public void getAllAnimeException() throws Exception {
+        this.mockMvc.perform(get("/anime?offset=99999999").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     public void getTrending() throws Exception {
         URL url = new URL("https://kitsu.io/api/edge/trending/anime");
         JsonNode node = getJson(url);
@@ -77,6 +104,13 @@ public class AnimeControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$[0].name").value(nameList.get(0)));
+    }
+
+    @Test
+    public void searchOffset() throws Exception {
+        this.mockMvc.perform(get("/anime/evangelion?offset=3").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
     @Test
