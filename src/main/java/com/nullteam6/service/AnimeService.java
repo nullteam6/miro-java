@@ -146,7 +146,7 @@ public class AnimeService {
      * @throws IOException IOException resulting from either a MalformedURLException or a JsonProcessingException
      */
     public PaginatedList<Anime> getByCategoryOffset(Integer category, Integer offset) throws IOException {
-        URL url = new URL("https://kitsu.io/api/edge/category/" + category + "/anime?page[offset]=" + offset);
+        URL url = new URL("https://kitsu.io/api/edge/categories/" + category + "/anime?page[offset]=" + offset);
         KitsuCommand command = new KitsuCommand(null, url);
         KitsuUtility.getInstance().addToQueue(command);
         while (KitsuUtility.getInstance().contains(command)) {
@@ -225,7 +225,7 @@ public class AnimeService {
      * @throws IOException  IOException resulting from either a MalformedURLException or JsonProcessingException
      */
     public PaginatedList<Anime> getAllWithOffset(Integer offset) throws IOException {
-        URL url = new URL("https://kitso.io/api/edge/anime?page[offset]=" + offset);
+        URL url = new URL("https://kitsu.io/api/edge/anime?page[limit]=10&page[offset]=" + offset);
         KitsuCommand command = new KitsuCommand(null, url);
         KitsuUtility.getInstance().addToQueue(command);
         while (KitsuUtility.getInstance().contains(command)) {
