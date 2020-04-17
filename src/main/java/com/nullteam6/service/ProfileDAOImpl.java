@@ -5,7 +5,6 @@ import com.nullteam6.models.ProfileDTO;
 import com.nullteam6.utility.PaginatedList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,14 +53,7 @@ public class ProfileDAOImpl implements ProfileDAO {
     @Override
     public boolean updateProfile(Profile profile) {
         Session s = sessionFactory.getCurrentSession();
-        try {
-            s.saveOrUpdate(profile);
-        } catch (NonUniqueObjectException ex) {
-            Profile p = s.get(Profile.class, profile.getId());
-            s.evict(p);
-            s.merge(profile);
-        }
-        s.flush();
+        s.merge(profile);
         return true;
     }
 
