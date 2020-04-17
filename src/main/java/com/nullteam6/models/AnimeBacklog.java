@@ -13,23 +13,23 @@ public class AnimeBacklog {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.PERSIST, CascadeType.REMOVE})
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(name = "BACKLOG_ANIME")
     private List<Anime> backlist;
 
 
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.PERSIST, CascadeType.REMOVE})
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(name = "PROGRESS_ANIME")
     private List<Anime> inProgList;
 
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.PERSIST, CascadeType.REMOVE})
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(name = "FINISHED_ANIME")
     private List<Anime> finishedList;
 
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.PERSIST, CascadeType.REMOVE})
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(name = "DROPPED_ANIME")
     private List<Anime> droppedList;

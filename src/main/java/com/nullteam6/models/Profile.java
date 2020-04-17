@@ -14,7 +14,7 @@ public class Profile {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.PERSIST, CascadeType.REMOVE})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinTable(name = "PROFILE_FRIENDS",
             joinColumns = {@JoinColumn(name = "PROFILE_ID")},
             inverseJoinColumns = {@JoinColumn(name = "FOLLOWINGLIST_ID")})
@@ -24,7 +24,7 @@ public class Profile {
     @Column(name = "user_uid", unique = true)
     private String uid;
     private String description;
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private AnimeBacklog aniBacklog;
 
     public Profile() {
