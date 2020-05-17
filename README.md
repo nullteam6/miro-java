@@ -1,4 +1,3 @@
-# Miro Restful API
-Restful API written in Java for Miro. 
+# Miro back-end
 
-Written in Java utilizing Spring, Spring MVC and various other Spring Libraries. 
+Written in Java with Spring and Hibernate. RESTfully speaks JSON.
